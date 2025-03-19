@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>in.virit</groupId>
+    <artifactId>paikat</artifactId>
+    <name>Project base for Vaadin Flow and Spring Boot</name>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <properties>
+        <!-- Defaults come from parent, but shown here how to override -->
+        <java.version>23</java.version>
+    </properties>
+
+    <parent>
+        <groupId>in.virit.sb</groupId>
+        <!-- Use project-parent if you don't want to have Viritin dependency -->
+        <artifactId>viritin-project-parent</artifactId>
+        <version>0.0.12-SNAPSHOT</version>
+        <relativePath/>
+    </parent>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.eclipse.store</groupId>
+            <artifactId>integrations-spring-boot3</artifactId>
+            <version>2.1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>in.virit</groupId>
+            <artifactId>viritin</artifactId>
+            <version>2.13.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.parttio</groupId>
+            <artifactId>maplibre</artifactId>
+            <version>1.3.6-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.webauthn4j</groupId>
+            <artifactId>webauthn4j-core</artifactId>
+            <version>0.28.5.RELEASE</version>
+        </dependency>
+
+        <!-- Essential Vaadin & Spring Dependencies coming from parent -->
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+        <!-- Essential Vaadin & Spring plugins coming from parent -->
+        </plugins>
+    </build>
+
+</project>
