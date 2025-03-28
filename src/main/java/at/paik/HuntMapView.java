@@ -138,7 +138,11 @@ public class HuntMapView extends VerticalLayout implements Consumer<LocationUpda
         System.out.println("Location update: " + locationUpdate);
         TrackerMarker trackerMarker = getTrackerMarker(locationUpdate.user());
         GeolocationEvent event = locationUpdate.event();
-        trackerMarker.addPoint(new Coordinate(event.getCoords().getLongitude(), event.getCoords().getLatitude()),event.getInstant(), event.getCoords().getHeading().intValue());
+        Double heading = event.getCoords().getHeading();
+        if (heading == null) {
+            heading = 0d;
+        }
+        trackerMarker.addPoint(new Coordinate(event.getCoords().getLongitude(), event.getCoords().getLatitude()),event.getInstant(), heading.intValue());
     }
 
     enum SpotStatus {
