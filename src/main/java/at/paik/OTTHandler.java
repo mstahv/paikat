@@ -1,8 +1,8 @@
 package at.paik;
 
+import at.paik.domain.User;
+import at.paik.service.Dao;
 import com.vaadin.flow.component.html.Anchor;
-import com.vaadin.flow.component.html.Paragraph;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,26 +12,34 @@ import org.springframework.security.web.authentication.ott.OneTimeTokenGeneratio
 import org.vaadin.firitin.components.notification.VNotification;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Optional;
 
 public class OTTHandler implements OneTimeTokenGenerationSuccessHandler {
+
+    private final List<User> users;
+
+    public OTTHandler(Dao dao) {
+        this.users = dao.getData().users;
+    }
+
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, OneTimeToken oneTimeToken) throws IOException, ServletException {
         // In a real word app this would be sent to you via email/sms
-        var notification = VNotification.prominent("Check your email for login link!");
-        notification.add(new VerticalLayout(){{
-            add(new Paragraph("""
-                    In a real world app this would be sent to you via email/SMS,
-                    "but in this demo app we don't have email/SMS capabilities. 
-                    Just click the link below to login (utilizes standard Spring 
-                    Security generated page, but you can naturally replace that with a better 
-                    looking alternative. After successful login you ought to reset your
-                    password or some other authentication method.
-                    """));
-            add(new Paragraph("OTT:" + oneTimeToken.getTokenValue()));
-            String url = "/login/ott?token=" + oneTimeToken.getTokenValue();
-            url = "/my-ott-submit?token=" + oneTimeToken.getTokenValue();
-            add(new Anchor(url, "Click here to login"){{setRouterIgnore(true); /* This god damn wrong defualt 🤬*/ focus();}});
-        }});
-        notification.setDuration(20*1000);
+        String username = oneTimeToken.getUsername();
+
+        Optional<User> user = users.stream().filter(u -> u.getUsername().equals(username)).findFirst();
+        if(user.isPresent() && user.get().getPasskeys().isEmpty()) {
+            var notification = VNotification.prominent("Use this link to login or share it to actual user");
+            notification.add(new VerticalLayout(){{
+                String url = "http://localhost:8080/my-ott-submit?token=" + oneTimeToken.getTokenValue();
+                System.out.println(url);
+                add(new Anchor(url, "Click here to login"){{setRouterIgnore(true); /* This god damn wrong defualt 🤬*/ focus();}});
+            }});
+            notification.setDuration(20*1000);
+        } else {
+            VNotification.show("User not found or already has passkeys set, login with username not allowed.");
+        }
+
     }
 }

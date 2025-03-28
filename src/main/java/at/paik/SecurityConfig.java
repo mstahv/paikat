@@ -1,10 +1,10 @@
 package at.paik;
 
 import at.paik.domain.User;
-import at.paik.service.DataRoot;
 import at.paik.service.Dao;
 import com.vaadin.flow.spring.security.VaadinWebSecurity;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.ott.InMemoryOneTimeTokenService;
@@ -57,7 +57,7 @@ public class SecurityConfig extends VaadinWebSecurity {
         // super.configure(HttpSecurity) as it adds final anyRequest matcher
 
         http.authorizeHttpRequests(auth -> auth.requestMatchers(
-                new AntPathRequestMatcher("/public/**"),
+                        new AntPathRequestMatcher("/public/**"),
                         new AntPathRequestMatcher(("/my-ott-submit")))
                 .permitAll());
 
@@ -70,10 +70,9 @@ public class SecurityConfig extends VaadinWebSecurity {
         http.authorizeHttpRequests(
                 authorize -> authorize.requestMatchers(new AntPathRequestMatcher("/webauthn/**")).permitAll());
         http.csrf(cfg -> cfg.ignoringRequestMatchers(
-                new AntPathRequestMatcher("/webauthn/**"),new AntPathRequestMatcher("/login/webauthn")));
+                new AntPathRequestMatcher("/webauthn/**"), new AntPathRequestMatcher("/login/webauthn")));
 
         super.configure(http);
-
 
 
         // This is important to register your login view to the
@@ -81,32 +80,38 @@ public class SecurityConfig extends VaadinWebSecurity {
         setLoginView(http, LoginView.class);
     }
 
+    @Value("${webauthn.id}")
+    String webauthnId;
+    @Value("${webauthn.origin}")
+    String webauthnOrigin;
+
     @Bean
     public WebAuthnRelyingPartyOperations relyingPartyOperations(PublicKeyCredentialUserEntityRepository userEntities, UserCredentialRepository userCredentials) {
         return new Webauthn4JRelyingPartyOperations(userEntities, userCredentials,
                 PublicKeyCredentialRpEntity.builder().id(
-                                "localhost")
-                        .name("}> Vaadin Security Demo").build(), Set.of("http://localhost:8080"));
+                                webauthnId)
+                        .name("Paik.at").build(), Set.of(webauthnOrigin));
     }
 
 
-    @Bean public PublicKeyCredentialUserEntityRepository publicKeyCredentialUserEntityRepository(Session session, DataRoot dataRoot) {
+    @Bean
+    public PublicKeyCredentialUserEntityRepository publicKeyCredentialUserEntityRepository(Session session, Dao dao) {
         return new PublicKeyCredentialUserEntityRepository() {
 
             @Override
             public PublicKeyCredentialUserEntity findById(Bytes id) {
                 System.out.println("Find by id " + id);
-                return dataRoot.users.stream().filter(u -> u.webAuthnId.equals(id)).findAny().get();
+                return dao.getData().users.stream().filter(u -> u.webAuthnId.equals(id)).findAny().get();
             }
 
             @Override
             public PublicKeyCredentialUserEntity findByUsername(String username) {
-                Optional<User> any = dataRoot.users.stream().filter(u -> u.getName().equals(username)).findAny();
-                if(any.isEmpty()) {
+                Optional<User> any = dao.getData().users.stream().filter(u -> u.getName().equals(username)).findAny();
+                if (any.isEmpty()) {
                     return null;
                 } else {
                     User user = any.get();
-                    if(user.webAuthnId == null) {
+                    if (user.webAuthnId == null) {
                         return null;
                     } else {
                         return user;
@@ -118,7 +123,7 @@ public class SecurityConfig extends VaadinWebSecurity {
             @Override
             public void save(PublicKeyCredentialUserEntity userEntity) {
                 Optional<User> user = session.user();
-                if(!user.isEmpty()) {
+                if (!user.isEmpty()) {
                     user.get().webAuthnId = userEntity.getId();
                 } else {
                     // Login
@@ -133,7 +138,8 @@ public class SecurityConfig extends VaadinWebSecurity {
         };
     }
 
-    @Bean public UserCredentialRepository userCredentialRepository(Session session, DataRoot dataRoot, Dao dao) {
+    @Bean
+    public UserCredentialRepository userCredentialRepository(Session session, Dao dao) {
         return new UserCredentialRepository() {
             @Override
             public void delete(Bytes credentialId) {
@@ -145,8 +151,8 @@ public class SecurityConfig extends VaadinWebSecurity {
                 System.out.println("saving CredentialRecord");
                 Optional<User> user = session.user();
 
-                if(user.isEmpty()) {
-                    user = dataRoot.users.stream().filter(u -> u.webAuthnId.equals(credentialRecord.getUserEntityUserId())).findAny();
+                if (user.isEmpty()) {
+                    user = dao.getData().users.stream().filter(u -> u.webAuthnId.equals(credentialRecord.getUserEntityUserId())).findAny();
                 }
 
                 User user1 = user.get();
@@ -157,9 +163,9 @@ public class SecurityConfig extends VaadinWebSecurity {
             @Override
             public CredentialRecord findByCredentialId(Bytes credentialId) {
                 // TODO add map for efficiency (if this ever becomes a problems...)
-                for(User u : dataRoot.users) {
+                for (User u : dao.getData().users) {
                     CredentialRecord credentialRecord = u.getPasskeys().get(credentialId);
-                    if(credentialRecord != null) {
+                    if (credentialRecord != null) {
                         return credentialRecord;
                     }
                 }
@@ -168,8 +174,8 @@ public class SecurityConfig extends VaadinWebSecurity {
 
             @Override
             public List<CredentialRecord> findByUserId(Bytes userId) {
-                Optional<User> user = dataRoot.users.stream().filter(u -> u.webAuthnId.equals(userId)).findAny();
-                if(user.isEmpty()) {
+                Optional<User> user = dao.getData().users.stream().filter(u -> u.webAuthnId.equals(userId)).findAny();
+                if (user.isEmpty()) {
                     return Collections.emptyList();
                 }
                 return Collections.unmodifiableList(new ArrayList<>(user.get().getPasskeys().values()));
@@ -178,8 +184,8 @@ public class SecurityConfig extends VaadinWebSecurity {
     }
 
     @Bean
-    OneTimeTokenGenerationSuccessHandler tokenGenerationSuccessHandler() {
-        return new OTTHandler();
+    OneTimeTokenGenerationSuccessHandler tokenGenerationSuccessHandler(Dao dao) {
+        return new OTTHandler(dao);
     }
 
     @Bean
@@ -201,7 +207,7 @@ public class SecurityConfig extends VaadinWebSecurity {
 
         @GetMapping("/my-ott-submit")
         @ResponseBody
-        public String ottSubmitPage(@RequestParam(name="token", required=true) String token, CsrfToken csrfToken, HttpServletResponse response) {
+        public String ottSubmitPage(@RequestParam(name = "token", required = true) String token, CsrfToken csrfToken, HttpServletResponse response) {
             response.setContentType("text/html");
             return """
                     <html>

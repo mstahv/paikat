@@ -5,6 +5,9 @@ import at.paik.domain.Team;
 import at.paik.domain.User;
 import org.eclipse.serializer.persistence.types.Storer;
 import org.eclipse.store.storage.embedded.types.EmbeddedStorageManager;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.security.web.webauthn.api.CredentialRecord;
 import org.springframework.stereotype.Service;
 
@@ -49,4 +52,16 @@ public class Dao {
         currentTeam.spots.add(spot);
         storageManager.storeAll(currentTeam, currentTeam.spots, spot);
     }
+
+    @EventListener
+    public void onAppReady(ContextRefreshedEvent event) {
+        if(getData().users.isEmpty()) {
+            System.out.println("Application started without any users, adding Masa");
+            User user = new User();
+            user.name = "Matti";
+            getData().users.add(user);
+            storeData();
+        }
+    }
+
 }

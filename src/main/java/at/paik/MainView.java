@@ -11,14 +11,13 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.Emphasis;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.H5;
-import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.router.BeforeEnterEvent;
-import com.vaadin.flow.router.BeforeEnterListener;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.Point;
 import org.vaadin.firitin.appframework.MenuItem;
 import org.vaadin.firitin.components.button.DefaultButton;
 import org.vaadin.firitin.components.button.VButton;
@@ -27,10 +26,15 @@ import org.vaadin.firitin.components.notification.VNotification;
 import org.vaadin.firitin.components.orderedlayout.VVerticalLayout;
 import org.vaadin.firitin.geolocation.GeolocationEvent;
 
+import java.time.Instant;
+import java.util.Date;
+import java.util.List;
 import java.util.function.Consumer;
 
+import static java.lang.Math.PI;
+
 @Route(layout = TopLayout.class)
-@MenuItem(order = 1, icon = VaadinIcon.BULLSEYE, title = "Home")
+@MenuItem(order = 1, icon = VaadinIcon.BULLSEYE, title ="Home")
 @AnonymousAllowed
 public class MainView extends VVerticalLayout implements Consumer<HuntStatusEvent> {
 
@@ -62,6 +66,17 @@ public class MainView extends VVerticalLayout implements Consumer<HuntStatusEven
                     add("You are not yet assigned to a spot.");
                 } else {
                     add(new H5("Assignment: " + assignment.getName()));
+                    session.getLatestLocation().ifPresent(geolocationEvent -> {
+                        var coordinate = new Coordinate(geolocationEvent.getCoords().getLongitude(), geolocationEvent.getCoords().getLatitude());
+                        GeometryFactory gf = new GeometryFactory();
+
+                        List<GeolocationEvent> lastPositions = session.user().get().getLastPositions();
+                        int distance = (int) (assignment.getPoint().distance(gf.createPoint(coordinate))* (PI/180) * 6378137);
+                        var timestamp = Instant.ofEpochMilli(lastPositions.getLast().getTimestamp());
+                        Instant now = Instant.now();
+                        add(new H5("Distance to assignment: %d meters (%s)".formatted(distance, timestamp)));
+                    });
+
                     if (!h.onSpot(session.user().get())) {
                         add(new DefaultButton("Ready to hunt!", this::readyToHunt));
                     } else {

@@ -4,29 +4,25 @@ import at.paik.domain.Spot;
 import at.paik.service.Dao;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Emphasis;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
 import jakarta.annotation.security.PermitAll;
 import org.vaadin.addons.maplibre.PointField;
 import org.vaadin.firitin.appframework.MenuItem;
-import org.vaadin.firitin.components.button.DefaultButton;
 import org.vaadin.firitin.components.button.DeleteButton;
 import org.vaadin.firitin.components.notification.VNotification;
-import org.vaadin.firitin.components.textfield.VTextField;
 import org.vaadin.firitin.layouts.HorizontalFloatLayout;
 
 @Route(layout = TopLayout.class)
-@MenuItem(icon = VaadinIcon.LIST_UL, title = "Spots")
+@MenuItem(icon = VaadinIcon.LIST_UL, title = "Spots & dogs", parent = AdminViews.class)
 @PermitAll
 public class SpotListView extends VerticalLayout {
     private final Session session;
-    H2 activeTitle = new H2("Active spots:");
+    H2 activeTitle = new H2("Active spots & dogs:");
     H2 inActiveTitle = new H2("Inactive spots:");
     Div active = new Div(){{setWidthFull();}};
     Div inactive = new Div(){{setWidthFull();}};
@@ -48,9 +44,7 @@ public class SpotListView extends VerticalLayout {
         if (session.getCurrentTeam() != null) {
             add(new Button("New spot..."){{
                 addClickListener(e -> {
-
-                    new SpotEditor(new Spot()).open();
-
+                    new SpotEditor(session, new Spot()).addDetachListener(d -> init());
                 });
             }});
 
@@ -74,7 +68,7 @@ public class SpotListView extends VerticalLayout {
 
         Button relocate = new Button(VaadinIcon.EDIT.create()) {{
             addClickListener(e -> {
-                new SpotEditor(spot).open();
+                new SpotEditor(session, spot).addDetachListener(d -> init());
             });
         }};
         Button activeToggle = new Button(VaadinIcon.POWER_OFF.create()) {{
@@ -121,36 +115,4 @@ public class SpotListView extends VerticalLayout {
         }
     }
 
-    private class SpotEditor extends Dialog {
-        public SpotEditor(Spot spot) {
-            setHeaderTitle("Edit spot");
-            setSizeFull();
-            add(new VerticalLayout(){{
-                setPadding(false);
-                TextField name = new VTextField("Name"){
-                    @Override
-                    public void setValue(String value) {
-                        if(value == null) {
-                            value = "";
-                        }
-                        super.setValue(value);
-                    }
-                };
-                name.setValue(spot.getName());
-                name.addValueChangeListener(e -> {
-                    spot.setName(e.getValue());
-                });
-                name.focus();
-                add(name);
-                addAndExpand(new SpotPicker(spot));
-                add(new DefaultButton("Save"){{
-                    addClickListener(e -> {
-                        session.saveSpot(spot);
-                        close();
-                        init();
-                    });
-                }});
-            }});
-        }
-    }
 }

@@ -45,19 +45,23 @@ public class TopLayout extends MainLayout {
                     }));
                 }});
                 addToDrawer(teamSelector);
+
+                GeolocationOptions geolocationOptions = new GeolocationOptions();
+                geolocationOptions.setEnableHighAccuracy(true);
+                geolocationOptions.setMaximumAge(10*1000);
+                Geolocation.watchPosition(update -> {
+                            this.geolocation = update;
+                            session.saveLocation(update);
+                            System.out.println("Geo update for " + u.getName() + " " + update.toString());
+                        },
+                        error -> {
+                            System.out.println("Geolocation error : " + error.getErrorMessage() + " " + error.getError());
+                        }, geolocationOptions);
+
             } else {
                 addToDrawer(new Paragraph("User:" + principal));
             }
         }
-
-        GeolocationOptions geolocationOptions = new GeolocationOptions();
-        geolocationOptions.setEnableHighAccuracy(true);
-        Geolocation.watchPosition(update -> {
-                    this.geolocation = update;
-                },
-                error -> {
-                    System.out.println("Geolocation error : " + error.getErrorMessage() + " " + error.getError());
-                }, geolocationOptions);
 
     }
 

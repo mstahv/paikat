@@ -6,6 +6,7 @@ import at.paik.domain.User;
 import at.paik.service.Dao;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
@@ -15,7 +16,7 @@ import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.tabs.TabSheet;
+import com.vaadin.flow.dom.Style;
 import com.vaadin.flow.router.Route;
 import jakarta.annotation.security.PermitAll;
 import org.springframework.security.authentication.ott.GenerateOneTimeTokenRequest;
@@ -27,6 +28,7 @@ import org.vaadin.firitin.appframework.MenuItem;
 import org.vaadin.firitin.components.button.DeleteButton;
 import org.vaadin.firitin.components.button.VButton;
 import org.vaadin.firitin.components.notification.VNotification;
+import org.vaadin.firitin.components.orderedlayout.VVerticalLayout;
 import org.vaadin.firitin.layouts.HorizontalFloatLayout;
 import org.vaadin.firitin.util.BrowserPrompt;
 
@@ -35,7 +37,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Route(layout = TopLayout.class)
-@MenuItem(title = "Team & Assignments", icon = VaadinIcon.USERS, order = MenuItem.BEGINNING + 1)
+@MenuItem(title = "Team & Assignments", icon = VaadinIcon.USERS, order = MenuItem.BEGINNING + 1, parent = AdminViews.class)
 @PermitAll
 public class TeamMembersView extends VerticalLayout {
     private final Session session;
@@ -142,12 +144,10 @@ public class TeamMembersView extends VerticalLayout {
         int activeHunters = session.getCurrentTeam().getHunters().size() - inactiveHunters;
         int spots = session.getCurrentTeam().getActiveSpots().size();
         int unassignedHunters = unassigned.getComponentCount();
-        status.setText("Hunters: %s %s/%s | Active spots: %s (%s)".formatted(
+        status.setText("%s hunters %s | %s active spots".formatted(
                 activeHunters,
-                (unassignedHunters > 0 ? "(" + unassignedHunters + ")" : ""),
-                (activeHunters + inactiveHunters),
-                spots,
-                (spots - activeHunters)
+                (unassignedHunters > 0 ? "(" + unassignedHunters + " unussigned)" : ""),
+                spots
         ));
         unassignedHr.setVisible(unassignedHunters > 0);
     }
@@ -192,7 +192,7 @@ public class TeamMembersView extends VerticalLayout {
 
             getElement().executeJs("""
                     const shareData = {
-                      title: "Login to Paik.at as %s",
+                      title: "Share one-time-login to Paik.at as %s",
                       text: "Use this one-time-link to login to Paik.at. Link is valid only for a a period of time. For smooth experiene in the future, register a passkey right after login.",
                       url: "%s",
                     };
@@ -233,36 +233,61 @@ public class TeamMembersView extends VerticalLayout {
             new Dialog() {
                 {
                     setHeaderTitle("Assing %s to spot".formatted(user.getName()));
-                    TabSheet tabSheet = new TabSheet();
-                    tabSheet.add("List", new HorizontalFloatLayout() {
-                        {
+                    add(new VButton(VaadinIcon.CLOSE){{
+                        addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
+                        getStyle().setPosition(Style.Position.ABSOLUTE);
+                        getStyle().setRight("0.5em");
+                        getStyle().setTop("0.5em");
+                        getStyle().setZIndex(1000);
+                        addClickListener(e->close());
+                    }});
+                    add(new VVerticalLayout() {{
+                        if(user.getAssignment() != null) {
                             add(new VButton(VaadinIcon.TRASH, e -> {
                                 user.setSpot(null);
                                 close();
                                 placeInCorrectSlot();
                                 updateCard();
-                            }));
-                            List<Spot> activeSpots = session.getCurrentTeam().getActiveSpots();
-                            for (Spot spot : activeSpots) {
-                                add(new Button(spot.getName(), e -> {
-                                    assign(spot);
-                                }));
+                            }).withText("Remove assignment"));
+                        }
+
+                        HorizontalFloatLayout spots = new HorizontalFloatLayout();
+                        HorizontalFloatLayout spotsTaken = new HorizontalFloatLayout();
+                        List<Spot> activeSpots = session.getCurrentTeam().getActiveSpots();
+                        for (Spot spot : activeSpots) {
+                            List<User> hunters = session.getCurrentTeam().huntersIn(spot);
+                            String huntersStr = hunters.isEmpty() ? "" : " (" + hunters.stream().map(User::getName).collect(Collectors.joining(",")) + ")";
+                            Button assignBtn = new Button(spot.getName() + huntersStr, e -> {
+                                assign(spot);
+                            });
+                            if (!hunters.isEmpty()) {
+                                spotsTaken.add(assignBtn);
+                            } else {
+                                spots.add(assignBtn);
                             }
                         }
-                    });
-                    tabSheet.add("Map", new MapLibre() {{
-                        List<Spot> spots = session.getCurrentTeam().getSpots();
-                        for (Spot s : spots) {
-                            if (s.getPoint() != null) {
-                                Marker marker = addMarker(s.getPoint());
-                                marker.addClickListener(() -> {
-                                    assign(s);
-                                });
+                        add(spots);
+                        add(spotsTaken);
+                        spots.setWrap(true);
+                        spots.setSpacing("0.5em");
+                        spotsTaken.setWrap(true);
+                        spotsTaken.setSpacing("0.5em");
+
+                        add(new MapLibre() {{
+                            setHeight("40vh");
+                            List<Spot> spots = session.getCurrentTeam().getSpots();
+                            for (Spot s : spots) {
+                                if (s.getPoint() != null) {
+                                    Marker marker = addMarker(s.getPoint());
+                                    marker.addClickListener(() -> {
+                                        assign(s);
+                                    });
+                                }
                             }
-                        }
+                        }});
+
                     }});
-                    tabSheet.setSizeFull();
-                    add(tabSheet);
+
                     setSizeFull();
                     open();
                 }

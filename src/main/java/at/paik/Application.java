@@ -1,10 +1,14 @@
 package at.paik;
 
+import at.paik.domain.User;
 import at.paik.service.DataRoot;
 import at.paik.service.Dao;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.context.event.EventListener;
 
 import java.io.InputStream;
 
@@ -25,10 +29,6 @@ public class Application {
         SpringApplication.run(Application.class, args);
     }
 
-    @Bean
-    DataRoot dataRoot(Dao dao) {
-        return dao.getData();
-    }
 
     /**
      * This method enforces that the application can be started in production mode

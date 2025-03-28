@@ -1,5 +1,6 @@
 package at.paik;
 
+import at.paik.domain.LocationUpdate;
 import at.paik.domain.Spot;
 import at.paik.domain.Team;
 import at.paik.domain.User;
@@ -10,7 +11,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.spring.security.AuthenticationContext;
 import org.apache.commons.io.IOUtils;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.webauthn.api.CredentialRecord;
@@ -23,6 +23,7 @@ import org.springframework.security.web.webauthn.management.UserCredentialReposi
 import org.springframework.security.web.webauthn.management.WebAuthnRelyingPartyOperations;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.SessionScope;
+import org.vaadin.firitin.geolocation.GeolocationEvent;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -137,6 +138,20 @@ public class Session {
         boolean huntReady = getCurrentTeam().getActiveHunt().get().markReady(user);
         if(huntReady) {
             teamEventDistributor.fire(new HuntStatusEvent(currentTeam.getActiveHunt().get()));
+        }
+    }
+
+    public void saveLocation(GeolocationEvent update) {
+        user().get().savePosition(update);
+        teamEventDistributor.fire(new LocationUpdate(getCurrentTeam(), user().get(), update));
+    }
+
+    public Optional<GeolocationEvent> getLatestLocation() {
+        try {
+            GeolocationEvent last = user().get().getLastPositions().getLast();
+            return Optional.of(last);
+        } catch (Exception e) {
+            return Optional.empty();
         }
     }
 }
