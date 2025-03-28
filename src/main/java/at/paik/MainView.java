@@ -71,7 +71,7 @@ public class MainView extends VVerticalLayout implements Consumer<HuntStatusEven
                         GeometryFactory gf = new GeometryFactory();
 
                         List<GeolocationEvent> lastPositions = session.user().get().getLastPositions();
-                        int distance = (int) (assignment.getPoint().distance(gf.createPoint(coordinate))* (PI/180) * 6378137);
+                        int distance = (int) (assignment.getPoint().distance(gf.createPoint(coordinate))* (PI/180) * 6378137/2);
                         var timestamp = Instant.ofEpochMilli(lastPositions.getLast().getTimestamp());
                         Instant now = Instant.now();
                         add(new H5("Distance to assignment: %d meters (%s)".formatted(distance, timestamp)));
