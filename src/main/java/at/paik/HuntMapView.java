@@ -134,7 +134,6 @@ public class HuntMapView extends VerticalLayout implements Consumer<LocationUpda
 
     @Override
     public void accept(LocationUpdate locationUpdate) {
-        Notification.show("Location update for " + locationUpdate.user().getName());
         System.out.println("Location update: " + locationUpdate);
         TrackerMarker trackerMarker = getTrackerMarker(locationUpdate.user());
         GeolocationEvent event = locationUpdate.event();
