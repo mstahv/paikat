@@ -8,10 +8,12 @@ import org.springframework.security.web.webauthn.api.CredentialRecord;
 import org.springframework.security.web.webauthn.api.PublicKeyCredentialUserEntity;
 import org.vaadin.firitin.geolocation.GeolocationEvent;
 
+import java.time.Instant;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -75,12 +77,25 @@ public class User implements PublicKeyCredentialUserEntity, UserDetails {
     }
 
     public void savePosition(GeolocationEvent locationUpdate) {
-        // TODO ignore positions with weak accuracy
+        // Ignore if accuracy is too low
+        if(locationUpdate.getCoords().getAccuracy() > 50) {
+            return;
+        }
         if(lastPositions == null) {
             lastPositions = new LinkedList<>();
         }
         lastPositions.add(locationUpdate);
-        // TODO evict based on age
+        // Remove old positions
+        Instant threshold = Instant.now().minusSeconds(300);
+        Iterator<GeolocationEvent> iterator = lastPositions.iterator();
+        while (iterator.hasNext()) {
+            GeolocationEvent next = iterator.next();
+            if (next.getInstant().isBefore(threshold)) {
+                iterator.remove();
+            } else {
+                break;
+            }
+        }
     }
 
     public List<GeolocationEvent> getLastPositions() {

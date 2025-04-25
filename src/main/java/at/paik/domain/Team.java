@@ -17,6 +17,7 @@ public class Team {
     public HashSet<User> disabledHunters = new HashSet<>();
     public HashSet<Spot> disabledSpots = new HashSet<>();
     private Hunt activeHunt;
+    private MapStyle mapStyle;
 
     public void startHunt() {
         activeHunt = new Hunt(this);
@@ -118,5 +119,13 @@ public class Team {
 
     public List<User> huntersIn(Spot spot) {
         return hunters.stream().filter(u -> u.getAssignment() == spot).toList();
+    }
+
+    public void setMapStyle(MapStyle mapStyle) {
+        this.mapStyle = mapStyle;
+    }
+
+    public MapStyle getMapStyle() {
+        return mapStyle;
     }
 }

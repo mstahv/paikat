@@ -5,7 +5,6 @@ import at.paik.domain.Team;
 import at.paik.domain.User;
 import org.eclipse.serializer.persistence.types.Storer;
 import org.eclipse.store.storage.embedded.types.EmbeddedStorageManager;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.security.web.webauthn.api.CredentialRecord;
@@ -56,7 +55,7 @@ public class Dao {
     @EventListener
     public void onAppReady(ContextRefreshedEvent event) {
         if(getData().users.isEmpty()) {
-            System.out.println("Application started without any users, adding Masa");
+            System.out.println("Application started without any users, adding Matti");
             User user = new User();
             user.name = "Matti";
             getData().users.add(user);
@@ -64,4 +63,21 @@ public class Dao {
         }
     }
 
+    public void validateUsername(String username) throws RuntimeException {
+        if(username.length() < 3) {
+            throw new RuntimeException("Username too short");
+        }
+        if(getData().users.stream().anyMatch(u -> u.name.equals(username))) {
+            throw new RuntimeException("Username already exists");
+        }
+    }
+
+    public User registerUser(String usernameValue) {
+        validateUsername(usernameValue);
+        User user = new User();
+        user.name = usernameValue;
+        getData().users.add(user);
+        storeData();
+        return user;
+    }
 }

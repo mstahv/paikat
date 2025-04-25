@@ -44,7 +44,7 @@ public class SpotListView extends VerticalLayout {
         if (session.getCurrentTeam() != null) {
             add(new Button("New spot..."){{
                 addClickListener(e -> {
-                    new SpotEditor(session, new Spot()).addDetachListener(d -> init());
+                    new SpotEditor(session, new Spot(), 10.0).addDetachListener(d -> init());
                 });
             }});
 
@@ -68,7 +68,7 @@ public class SpotListView extends VerticalLayout {
 
         Button relocate = new Button(VaadinIcon.EDIT.create()) {{
             addClickListener(e -> {
-                new SpotEditor(session, spot).addDetachListener(d -> init());
+                new SpotEditor(session, spot, 10.0).addDetachListener(d -> init());
             });
         }};
         Button activeToggle = new Button(VaadinIcon.POWER_OFF.create()) {{

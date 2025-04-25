@@ -69,6 +69,9 @@ public class SpotMapView extends VerticalLayout {
         }
         map = new MapLibre();
         addAndExpand(map);
+        map.addMoveEndListener(e -> {
+            session.setMapViewport(e.getViewPort());
+        });
         map.addMapClickListener(e -> {
             if(crosshair == null) {
                 crosshair = map.addMarker(e.getPoint());
@@ -223,7 +226,7 @@ public class SpotMapView extends VerticalLayout {
                 add(new Emphasis("Inactive"));
             }
             add(new Button("Edit spot", e -> {
-                new SpotEditor(session, s)
+                new SpotEditor(session, s, map.getZoomLevel())
                         .addDetachListener(e1 -> {
                             init();
                             updateMarker(s, marker);
@@ -241,7 +244,8 @@ public class SpotMapView extends VerticalLayout {
     private void newSpot() {
         Spot spot = new Spot();
         spot.setPoint((Point) crosshair.getGeometry());
-        new SpotEditor(session, spot).addDetachListener(
+        Double zoomLevel = map.getZoomLevel();
+        new SpotEditor(session, spot, zoomLevel).addDetachListener(
                 detachEvent -> init());
     }
 

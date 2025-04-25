@@ -3,7 +3,6 @@ package at.paik;
 import at.paik.domain.Spot;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasComponents;
-import com.vaadin.flow.component.notification.Notification;
 import org.vaadin.addons.maplibre.Marker;
 import org.vaadin.addons.maplibre.PointField;
 import org.vaadin.firitin.components.dialog.VDialog;
@@ -36,10 +35,13 @@ public class SpotEditor extends BeanValidationForm<Spot> {
         });
     }};
 
-    public SpotEditor(Session session, Spot spot) {
+    public SpotEditor(Session session, Spot spot, Double zoomLevel) {
         super(Spot.class);
         this.session = session;
         point.setMarkerFormatter(this::formatMarker);
+        if(zoomLevel != null) {
+            point.getMap().setZoomLevel(zoomLevel);
+        }
         setEntity(spot);
         symbolRotation.setEnabled(symbol.getValue().rotatable());
         setSaveCaption("OK");

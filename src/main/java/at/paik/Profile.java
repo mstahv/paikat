@@ -1,5 +1,6 @@
 package at.paik;
 
+import at.paik.domain.MapStyle;
 import at.paik.domain.User;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -17,6 +18,7 @@ import org.vaadin.firitin.components.button.DeleteButton;
 import org.vaadin.firitin.components.button.VButton;
 import org.vaadin.firitin.components.notification.VNotification;
 import org.vaadin.firitin.components.textfield.VTextField;
+import org.vaadin.firitin.fields.EnumSelect;
 import org.vaadin.firitin.layouts.HorizontalFloatLayout;
 
 import java.util.ArrayList;
@@ -38,6 +40,14 @@ public class Profile extends VerticalLayout {
         removeAll();
         User user = session.user().get(); // Who came up with this API 🤣
         add(new H1("Profile: " + user.name));
+
+        add(new EnumSelect<>(MapStyle.class){{
+            setLabel("Preferred map style");
+            setValue(session.getMapStyle());
+            addValueChangeListener(e -> {
+                session.setMapStyle(e.getValue());
+            });
+        }});
 
         add(new H3("Passkeys:"));
 

@@ -9,7 +9,6 @@ import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.html.H5;
 import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.popover.Popover;
 import com.vaadin.flow.router.Route;
@@ -34,14 +33,14 @@ import java.util.stream.Collectors;
 @Route(layout = TopLayout.class)
 @MenuItem(icon = VaadinIcon.MAP_MARKER)
 @PermitAll
-public class HuntMapView extends VerticalLayout implements Consumer<LocationUpdate> {
+public class MapView extends VerticalLayout implements Consumer<LocationUpdate> {
 
     private final Session session;
     private MapLibre map;
 
     private Map<User, TrackerMarker> userToMarker = new HashMap<>();
 
-    public HuntMapView(Session session, TeamEventDistributor ted) {
+    public MapView(Session session, TeamEventDistributor ted) {
         this.session = session;
         setPadding(false);
         ted.registerLocationListener(session.getCurrentTeam(), this);
@@ -58,6 +57,12 @@ public class HuntMapView extends VerticalLayout implements Consumer<LocationUpda
             map.removeFromParent();
         }
         map = new MapLibre();
+        session.getMapViewport().ifPresent(v -> {
+            map.fitTo(v.getBounds(), 0);
+        });
+        map.addMoveEndListener(me -> {
+            session.setMapViewport(me.getViewPort());
+        });
         addAndExpand(map);
         userToMarker.clear();
         Team currentTeam = session.getCurrentTeam();

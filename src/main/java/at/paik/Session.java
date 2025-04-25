@@ -1,6 +1,7 @@
 package at.paik;
 
 import at.paik.domain.LocationUpdate;
+import at.paik.domain.MapStyle;
 import at.paik.domain.Spot;
 import at.paik.domain.Team;
 import at.paik.domain.User;
@@ -23,6 +24,7 @@ import org.springframework.security.web.webauthn.management.UserCredentialReposi
 import org.springframework.security.web.webauthn.management.WebAuthnRelyingPartyOperations;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.SessionScope;
+import org.vaadin.addons.maplibre.MapLibre;
 import org.vaadin.firitin.geolocation.GeolocationEvent;
 
 import java.io.IOException;
@@ -44,6 +46,8 @@ public class Session {
     private final TeamEventDistributor teamEventDistributor;
     private PublicKeyCredentialCreationOptions publicKeyCredentialCreationOptions;
     private Team currentTeam;
+    private MapStyle mapStyle;
+    private MapLibre.ViewPort viewport;
 
     public Session(Dao dao, AuthenticationContext authenticationContext, UserCredentialRepository userCredentialRepository, WebAuthnRelyingPartyOperations rpOperations, TeamEventDistributor teamEventDistributor) {
         this.dao = dao;
@@ -153,5 +157,21 @@ public class Session {
         } catch (Exception e) {
             return Optional.empty();
         }
+    }
+
+    public MapStyle getMapStyle() {
+        return mapStyle;
+    }
+
+    public void setMapStyle(MapStyle mapStyle) {
+        this.mapStyle = mapStyle;
+    }
+
+    public void setMapViewport(MapLibre.ViewPort viewPort) {
+        this.viewport = viewPort;
+    }
+
+    public Optional<MapLibre.ViewPort> getMapViewport() {
+        return Optional.ofNullable(viewport);
     }
 }

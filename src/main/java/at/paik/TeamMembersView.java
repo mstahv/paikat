@@ -1,6 +1,7 @@
 package at.paik;
 
 import at.paik.domain.Hunt;
+import at.paik.domain.MapStyle;
 import at.paik.domain.Spot;
 import at.paik.domain.User;
 import at.paik.service.Dao;
@@ -29,6 +30,7 @@ import org.vaadin.firitin.components.button.DeleteButton;
 import org.vaadin.firitin.components.button.VButton;
 import org.vaadin.firitin.components.notification.VNotification;
 import org.vaadin.firitin.components.orderedlayout.VVerticalLayout;
+import org.vaadin.firitin.fields.EnumSelect;
 import org.vaadin.firitin.layouts.HorizontalFloatLayout;
 import org.vaadin.firitin.util.BrowserPrompt;
 
@@ -45,6 +47,7 @@ public class TeamMembersView extends VerticalLayout {
     private final Dao service;
     private final Paragraph status = new Paragraph();
     private final Hr unassignedHr = new Hr();
+    private EnumSelect<MapStyle> mapStyle;
     H2 activeTitle = new H2("Active:");
     H2 inActiveTitle = new H2("Inactive:");
     Div assigned = new Slot();
@@ -69,6 +72,14 @@ public class TeamMembersView extends VerticalLayout {
         unassigned.removeAll();
         inactive.removeAll();
         add(status);
+        mapStyle = new EnumSelect<>(MapStyle.class) {{
+            setLabel("Default map style");
+            setValue(session.getMapStyle());
+            addValueChangeListener(e -> {
+                session.setMapStyle(e.getValue());
+            });
+        }};
+        add(mapStyle);
 
         Optional<Hunt> activeHunt = session.getCurrentTeam().getActiveHunt();
         if (activeHunt.isPresent()) {
