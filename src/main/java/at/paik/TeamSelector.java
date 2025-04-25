@@ -56,7 +56,7 @@ public class TeamSelector extends HorizontalLayout {
     }
 
     private void addTeam() {
-        BrowserPrompt.promptString("Name for your team:").thenAccept(name -> {
+        BrowserPrompt.promptString("Name for your team:", user.getName() +"'s team").thenAccept(name -> {
             Team team = new Team();
             team.name = name;
             team.hunters.add(user);
