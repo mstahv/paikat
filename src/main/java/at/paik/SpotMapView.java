@@ -4,6 +4,7 @@ import at.paik.domain.Spot;
 import at.paik.domain.Team;
 import at.paik.domain.User;
 import com.vaadin.flow.component.AttachEvent;
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
@@ -38,7 +39,7 @@ import java.util.stream.Collectors;
 @Route(layout = TopLayout.class)
 @MenuItem(icon = VaadinIcon.MAP_MARKER, parent = AdminViews.class)
 @PermitAll
-public class SpotMapView extends VerticalLayout {
+public class SpotMapView extends VerticalLayout implements ActionButtonOwner {
 
     private final Session session;
     private MapLibre map;
@@ -48,7 +49,7 @@ public class SpotMapView extends VerticalLayout {
     private Marker crosshair;
 
     private Button newSpotBtn = new VButton(VaadinIcon.MAP_MARKER, this::newSpot)
-            .withThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE)
+            .withThemeVariants(ButtonVariant.LUMO_PRIMARY)
             .withEnabled(false);
 
     public SpotMapView(Session session) {
@@ -121,9 +122,6 @@ public class SpotMapView extends VerticalLayout {
             }
         }
 
-        findAncestor(TopLayout.class).addToNavbar(newSpotBtn);
-        addDetachListener(detachEvent -> newSpotBtn.removeFromParent());
-
     }
 
     public Marker spotMarker(Spot spot) {
@@ -159,6 +157,11 @@ public class SpotMapView extends VerticalLayout {
             marker.setRotation(symbolRotation);
         }
         marker.setPoint(spot.getPoint());
+    }
+
+    @Override
+    public List<Component> getButtons() {
+        return List.of(newSpotBtn);
     }
 
     enum SpotStatus {

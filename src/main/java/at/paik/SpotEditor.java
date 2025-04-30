@@ -3,6 +3,7 @@ package at.paik;
 import at.paik.domain.Spot;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasComponents;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import org.vaadin.addons.maplibre.Marker;
 import org.vaadin.addons.maplibre.PointField;
 import org.vaadin.firitin.components.dialog.VDialog;
@@ -49,6 +50,9 @@ public class SpotEditor extends BeanValidationForm<Spot> {
             session.saveSpot(spot);
             getPopup().close();
         });
+        setResetHandler(s -> {getPopup().close();});
+        getResetButton().setText("");
+        getResetButton().setIcon(VaadinIcon.CLOSE.create());
         openInModalPopup();
     }
 
@@ -58,10 +62,22 @@ public class SpotEditor extends BeanValidationForm<Spot> {
     }
 
     @Override
+    protected Component createContent() {
+        VVerticalLayout layout = new VVerticalLayout();
+        layout.setPadding(false);
+        HasComponents formLayout = getFormLayout();
+        getFormComponents().forEach(f -> formLayout.add(f));
+        layout.add((Component) formLayout);
+        layout.add(getClassLevelViolationsDisplay());
+        return layout;
+    }
+
+    @Override
     public VDialog openInModalPopup() {
         VDialog dialog = super.openInModalPopup();
         dialog.setHeaderTitle("Spot editor");
         dialog.setSizeFull();
+        dialog.getHeader().add(getToolbar());
         return dialog;
     }
 

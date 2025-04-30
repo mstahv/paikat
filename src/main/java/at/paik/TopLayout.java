@@ -2,9 +2,12 @@ package at.paik;
 
 import at.paik.domain.User;
 import com.vaadin.flow.component.AttachEvent;
+import com.vaadin.flow.component.HasElement;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.dom.Style;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,17 +19,20 @@ import org.vaadin.firitin.geolocation.GeolocationOptions;
 public class TopLayout extends MainLayout {
 
     private final Session session;
-    private final TeamSelector teamSelector;
     private GeolocationEvent geolocation;
 
-    public TopLayout(Session session, TeamSelector teamSelector) {
+    private  HorizontalLayout actions = new HorizontalLayout(){{
+        getStyle().setPosition(Style.Position.ABSOLUTE);
+        getStyle().setRight("1em");
+    }};
+
+    public TopLayout(Session session) {
         this.session = session;
-        this.teamSelector = teamSelector;
     }
 
     @Override
     protected String getDrawerHeader() {
-        return "}> Paik.at";
+        return "Paik.at }>";
     }
 
 
@@ -39,12 +45,13 @@ public class TopLayout extends MainLayout {
         if (authentication != null) {
             Object principal = authentication.getPrincipal();
             if (principal instanceof User u) {
-                addToDrawer(new Paragraph("User:" + u.getUsername()) {{
+                addToDrawer(new HorizontalLayout(){{
+                    setPadding(true);
+                    add(new Paragraph(u.getUsername()));
                     add(new Button(VaadinIcon.EXIT.create(), e -> {
-                        session.logout();
-                    }));
+                            session.logout();
+                        }));
                 }});
-                addToDrawer(teamSelector);
 
                 GeolocationOptions geolocationOptions = new GeolocationOptions();
                 geolocationOptions.setEnableHighAccuracy(true);
@@ -59,7 +66,7 @@ public class TopLayout extends MainLayout {
                         }, geolocationOptions);
 
             } else {
-                addToDrawer(new Paragraph("User:" + principal));
+                addToDrawer(new Paragraph(""+principal));
             }
         }
 
@@ -69,5 +76,21 @@ public class TopLayout extends MainLayout {
     // TODO fire as some kind of events or piggypack listeners for other views.
     public GeolocationEvent getGeolocation() {
         return geolocation;
+    }
+
+
+    @Override
+    public void showRouterLayoutContent(HasElement content) {
+        super.showRouterLayoutContent(content);
+        actions.removeAll();
+        if (content instanceof ActionButtonOwner abo) {
+            actions.add(abo.getButtons());
+            addToNavbar(true, actions);
+        }
+    }
+
+    @Override
+    public void removeRouterLayoutContent(HasElement oldContent) {
+        super.removeRouterLayoutContent(oldContent);
     }
 }

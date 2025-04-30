@@ -6,6 +6,7 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H3;
+import com.vaadin.flow.component.html.H5;
 import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -30,9 +31,12 @@ import java.util.List;
 public class Profile extends VerticalLayout {
 
     private final Session session;
+    private final TeamSelector teamSelector;
 
-    public Profile(Session session) {
+
+    public Profile(Session session, TeamSelector teamSelector) {
         this.session = session;
+        this.teamSelector = teamSelector;
         initView();
     }
 
@@ -42,7 +46,7 @@ public class Profile extends VerticalLayout {
         add(new H1("Profile: " + user.name));
 
         add(new EnumSelect<>(MapStyle.class){{
-            setLabel("Preferred map style");
+            setLabel("Override map style");
             setValue(session.getMapStyle());
             addValueChangeListener(e -> {
                 session.setMapStyle(e.getValue());
@@ -74,23 +78,42 @@ public class Profile extends VerticalLayout {
                     });
         }));
 
-        add(new H3("Your teams:"));
+        add(new H3("Teams:"));
+
+        add(teamSelector);
+
+        add(new H5("Edit current teams:"));
 
         var teams = session.user().get().teams;
         teams.forEach(t -> {
             add(new HorizontalFloatLayout() {{
                 add(new VTextField() {{
+                    setLabel("Name");
                     setValue(t.name);
                     addValueChangeListener(v -> {
                         add(new VButton(VaadinIcon.CHECK, e -> {
                             t.name = getValue();
+                            // TODO persist
                             // Name is spread to a couple of places and action is rare, just make a full reload to update...
                             // Note, name for others don't update immediately, for perfect solution a new event would be needed.
                             UI.getCurrent().getPage().reload();
                         }));
                         v.unregisterListener();
                     });
+                    setMaxWidth("40%");
                 }});
+
+                add(new EnumSelect<>(MapStyle.class) {{
+                    setLabel("Default map");
+                    setValue(t.getMapStyle());
+                    addValueChangeListener(e -> {
+                        t.setMapStyle(e.getValue());
+                        // TODO persist
+                    });
+                    setMaxWidth("40%");
+                }});
+
+
             }});
         });
 

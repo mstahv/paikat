@@ -6,6 +6,8 @@ import at.paik.domain.Team;
 import at.paik.domain.User;
 import at.paik.service.TeamEventDistributor;
 import com.vaadin.flow.component.AttachEvent;
+import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H5;
 import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -19,6 +21,7 @@ import org.vaadin.addons.maplibre.Marker;
 import org.vaadin.addons.maplibre.components.TrackerMarker;
 import org.vaadin.firitin.appframework.MenuItem;
 import org.vaadin.firitin.components.button.DefaultButton;
+import org.vaadin.firitin.components.button.VButton;
 import org.vaadin.firitin.geolocation.GeolocationEvent;
 
 import java.time.Duration;
@@ -33,12 +36,20 @@ import java.util.stream.Collectors;
 @Route(layout = TopLayout.class)
 @MenuItem(icon = VaadinIcon.MAP_MARKER)
 @PermitAll
-public class MapView extends VerticalLayout implements Consumer<LocationUpdate> {
+public class MapView extends VerticalLayout implements Consumer<LocationUpdate>, ActionButtonOwner {
 
     private final Session session;
     private MapLibre map;
 
     private Map<User, TrackerMarker> userToMarker = new HashMap<>();
+
+    private Button centerToLocation = new VButton(VaadinIcon.BULLSEYE, this::centerToLocation);
+
+    private void centerToLocation() {
+        session.getLatestLocation().ifPresent( location ->
+                map.flyTo(location.getCoords().getLongitude(), location.getCoords().getLatitude(), 13.0)
+        );
+    }
 
     public MapView(Session session, TeamEventDistributor ted) {
         this.session = session;
@@ -147,6 +158,11 @@ public class MapView extends VerticalLayout implements Consumer<LocationUpdate> 
             heading = 0d;
         }
         trackerMarker.addPoint(new Coordinate(event.getCoords().getLongitude(), event.getCoords().getLatitude()),event.getInstant(), heading.intValue());
+    }
+
+    @Override
+    public List<Component> getButtons() {
+        return List.of(centerToLocation);
     }
 
     enum SpotStatus {

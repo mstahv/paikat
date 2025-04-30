@@ -69,3 +69,15 @@ html {
 .maplibregl-map {
     background-color: #f8fff7;
 }
+
+@media (display-mode: standalone) and @supports (-webkit-touch-callout: none) {
+    vaadin-app-layout[overlay]::part(navbar) {
+        /* workaround for "regression" after https://github.com/vaadin/flow/pull/21025
+         * The UX is now better but there is visually "too much padding" in the bottom
+         * with devices that have rounded corners.
+         * Note, this selector hits only ios pwa's, probably something similar would be needed for android
+         * (I don't have a good test setup, so left out). Also this may now look weird on some ipads 🤔
+         */
+        padding-bottom: 12px;
+    }
+}

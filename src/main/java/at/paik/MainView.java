@@ -7,12 +7,12 @@ import at.paik.domain.User;
 import at.paik.service.TeamEventDistributor;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.UI;
-import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.Emphasis;
+import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.H5;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.router.Route;
 import jakarta.annotation.security.PermitAll;
 import org.locationtech.jts.geom.Coordinate;
@@ -52,6 +52,7 @@ public class MainView extends VVerticalLayout implements Consumer<HuntStatusEven
     private void init() {
         removeAll();
         Team currentTeam = session.getCurrentTeam();
+        add(new H1(currentTeam.name));
         currentTeam.getActiveHunt().ifPresentOrElse(h -> {
             hunt = h;
 
@@ -83,9 +84,7 @@ public class MainView extends VVerticalLayout implements Consumer<HuntStatusEven
                         add(new H5("Waiting for others"));
                     }
                 }
-
                 add(new HuntSummary(h));
-                add("It works?!, tähän jahdin tila, onko passit valmiit, statistiikat ja AI arviot kuinka kaukana ollaan, lopetus/uuden aloitus");
             }
         }, () -> {
             add(new Emphasis("No ongoing hunt, wait for your assignment..."));
@@ -101,16 +100,12 @@ public class MainView extends VVerticalLayout implements Consumer<HuntStatusEven
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
 
-        GeolocationEvent geolocation = findAncestor(TopLayout.class).getGeolocation();
-        if (geolocation != null) {
-            add(new Emphasis("Your location: " + geolocation.getCoords() + " TODO X meters from the spot."));
-        }
-
         session.user().ifPresent(user -> {
             if(user.getPasskeys().isEmpty()) {
                 attachEvent.getUI().navigate(Profile.class);
 
-                VNotification.prominent("No passkeys attached to your account, add one now!");
+                VNotification.prominent("No passkeys attached to your account, add one now to enable all features!")
+                        .withThemeVariants(NotificationVariant.LUMO_WARNING);
             }
         });
 

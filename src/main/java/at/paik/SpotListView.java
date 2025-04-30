@@ -3,7 +3,9 @@ package at.paik;
 import at.paik.domain.Spot;
 import at.paik.service.Dao;
 import com.vaadin.flow.component.AttachEvent;
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Emphasis;
 import com.vaadin.flow.component.html.H2;
@@ -14,18 +16,28 @@ import jakarta.annotation.security.PermitAll;
 import org.vaadin.addons.maplibre.PointField;
 import org.vaadin.firitin.appframework.MenuItem;
 import org.vaadin.firitin.components.button.DeleteButton;
+import org.vaadin.firitin.components.button.VButton;
 import org.vaadin.firitin.components.notification.VNotification;
 import org.vaadin.firitin.layouts.HorizontalFloatLayout;
+
+import java.util.List;
 
 @Route(layout = TopLayout.class)
 @MenuItem(icon = VaadinIcon.LIST_UL, title = "Spots & dogs", parent = AdminViews.class)
 @PermitAll
-public class SpotListView extends VerticalLayout {
+public class SpotListView extends VerticalLayout implements ActionButtonOwner {
     private final Session session;
     H2 activeTitle = new H2("Active spots & dogs:");
     H2 inActiveTitle = new H2("Inactive spots:");
     Div active = new Div(){{setWidthFull();}};
     Div inactive = new Div(){{setWidthFull();}};
+    Button newSpotBtn = new VButton(VaadinIcon.PLUS, this::addSpot){{
+        addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+    }};
+
+    private void addSpot() {
+        new SpotEditor(session, new Spot(), 10.0).addDetachListener(d -> init());
+    }
 
     public SpotListView(Session session, Dao dao) {
         this.session = session;
@@ -42,12 +54,6 @@ public class SpotListView extends VerticalLayout {
         active.removeAll();
         inactive.removeAll();
         if (session.getCurrentTeam() != null) {
-            add(new Button("New spot..."){{
-                addClickListener(e -> {
-                    new SpotEditor(session, new Spot(), 10.0).addDetachListener(d -> init());
-                });
-            }});
-
             add(activeTitle);
             add(active);
             add(inActiveTitle);
@@ -61,6 +67,11 @@ public class SpotListView extends VerticalLayout {
 
             }
         }
+    }
+
+    @Override
+    public List<Component> getButtons() {
+        return List.of(newSpotBtn);
     }
 
     class SpotCard extends HorizontalFloatLayout {

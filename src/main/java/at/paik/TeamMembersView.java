@@ -47,7 +47,6 @@ public class TeamMembersView extends VerticalLayout {
     private final Dao service;
     private final Paragraph status = new Paragraph();
     private final Hr unassignedHr = new Hr();
-    private EnumSelect<MapStyle> mapStyle;
     H2 activeTitle = new H2("Active:");
     H2 inActiveTitle = new H2("Inactive:");
     Div assigned = new Slot();
@@ -72,14 +71,6 @@ public class TeamMembersView extends VerticalLayout {
         unassigned.removeAll();
         inactive.removeAll();
         add(status);
-        mapStyle = new EnumSelect<>(MapStyle.class) {{
-            setLabel("Default map style");
-            setValue(session.getMapStyle());
-            addValueChangeListener(e -> {
-                session.setMapStyle(e.getValue());
-            });
-        }};
-        add(mapStyle);
 
         Optional<Hunt> activeHunt = session.getCurrentTeam().getActiveHunt();
         if (activeHunt.isPresent()) {

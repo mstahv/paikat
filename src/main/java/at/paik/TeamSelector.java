@@ -11,11 +11,12 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.spring.annotation.RouteScope;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import org.vaadin.firitin.components.notification.VNotification;
+import org.vaadin.firitin.layouts.HorizontalFloatLayout;
 import org.vaadin.firitin.util.BrowserPrompt;
 
 @SpringComponent
 @RouteScope
-public class TeamSelector extends HorizontalLayout {
+public class TeamSelector extends HorizontalFloatLayout {
     private final Session session;
     private final Dao service;
     private User user;
@@ -42,15 +43,17 @@ public class TeamSelector extends HorizontalLayout {
         this.user = session.user().get();
         removeAll();
         add(new ComboBox<Team>() {{
+            setLabel("Current team");
             setItems(user.teams);
             setItemLabelGenerator(t -> t.name);
             Team team = session.getCurrentTeam();
             setValue(team);
             addValueChangeListener(e -> {
-                VNotification.prominent("TODO");
+                session.setCurrentTeam(e.getValue());
             });
         }});
         add(new Button(VaadinIcon.PLUS.create()) {{
+            setText("Add new");
             addClickListener(e -> addTeam());
         }});
     }

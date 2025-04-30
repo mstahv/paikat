@@ -5,8 +5,7 @@ import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.theme.Theme;
 
 @PWA(name = "Paikat", shortName = "Paikat",
-        backgroundColor = "hsl(22, 96%, 47%)",
-        themeColor = "hsl(22, 96%, 47%)"
+        themeColor = "hsl(31, 100%, 42%)"
 )
 @Theme(value = "paikatgreen", variant = "dark")
 public class AppShell implements AppShellConfigurator {

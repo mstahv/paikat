@@ -17,6 +17,9 @@ import org.vaadin.firitin.components.button.DefaultButton;
 
 import java.io.IOException;
 
+/*
+ TODO figure out if this is totally obsolete in this demo 🤷‍♂️
+ */
 @SpringComponent
 @Scope("prototype")
 public class OttButton extends Button {

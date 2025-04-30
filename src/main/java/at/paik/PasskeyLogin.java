@@ -2,6 +2,7 @@ package at.paik;
 
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
@@ -16,6 +17,7 @@ public class PasskeyLogin extends Button {
             }
         });
         loadWebauthJs();
+        addThemeVariants(ButtonVariant.LUMO_PRIMARY);
     }
 
     public static void loadWebauthJs() {
