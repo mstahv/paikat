@@ -45,7 +45,7 @@ public class LoginView extends VVerticalLayout {
         There are no service guarantees (DB currently not backed up and data not necessarily migrated on new version), but it should work as fully featured hunt planner and spot randomizer 😎"""));
 
         add(new Emphasis("""
-        TIP: Add this app as "home screen web app" for best experience! """));
+        TIP: Add this app as "home screen web app" for best experience."""));
 
         add(new PasskeyLogin());
 

@@ -89,7 +89,7 @@ public class Team {
 
     public int randomSpots() {
         ArrayList<Spot> freespots = new ArrayList<>(getActiveSpots());
-        HashSet<User> users = new HashSet<>(getHunters());
+        ArrayList<User> users = new ArrayList<>(getHunters());
         var allUsers = users.iterator();
         while (allUsers.hasNext()) {
             User user = allUsers.next();
@@ -100,7 +100,7 @@ public class Team {
                 allUsers.remove(); // no need for spot
             }
         }
-        Collections.shuffle(freespots);
+        Collections.shuffle(users);
         var withoutSpot = users.iterator();
         while (withoutSpot.hasNext() && !freespots.isEmpty()) {
             var user = withoutSpot.next();

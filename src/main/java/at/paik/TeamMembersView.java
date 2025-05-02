@@ -1,11 +1,11 @@
 package at.paik;
 
 import at.paik.domain.Hunt;
-import at.paik.domain.MapStyle;
 import at.paik.domain.Spot;
 import at.paik.domain.User;
 import at.paik.service.Dao;
 import com.vaadin.flow.component.AttachEvent;
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
@@ -16,6 +16,7 @@ import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.NotificationVariant;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.dom.Style;
 import com.vaadin.flow.router.Route;
@@ -26,11 +27,11 @@ import org.springframework.security.authentication.ott.OneTimeTokenService;
 import org.vaadin.addons.maplibre.MapLibre;
 import org.vaadin.addons.maplibre.Marker;
 import org.vaadin.firitin.appframework.MenuItem;
+import org.vaadin.firitin.components.button.DefaultButton;
 import org.vaadin.firitin.components.button.DeleteButton;
 import org.vaadin.firitin.components.button.VButton;
 import org.vaadin.firitin.components.notification.VNotification;
 import org.vaadin.firitin.components.orderedlayout.VVerticalLayout;
-import org.vaadin.firitin.fields.EnumSelect;
 import org.vaadin.firitin.layouts.HorizontalFloatLayout;
 import org.vaadin.firitin.util.BrowserPrompt;
 
@@ -41,22 +42,37 @@ import java.util.stream.Collectors;
 @Route(layout = TopLayout.class)
 @MenuItem(title = "Team & Assignments", icon = VaadinIcon.USERS, order = MenuItem.BEGINNING + 1, parent = AdminViews.class)
 @PermitAll
-public class TeamMembersView extends VerticalLayout {
+public class TeamMembersView extends VerticalLayout implements ActionButtonOwner {
     private final Session session;
     private final OneTimeTokenService oneTimeTokenService;
     private final Dao service;
     private final Paragraph status = new Paragraph();
     private final Hr unassignedHr = new Hr();
-    H2 activeTitle = new H2("Active:");
-    H2 inActiveTitle = new H2("Inactive:");
+    H2 activeTitle = new H2("Active members:");
+    H2 inActiveTitle = new H2("Inactive members:");
     Div assigned = new Slot();
     Div unassigned = new Slot();
     Div inactive = new Slot();
+    Button newMember = new VButton(VaadinIcon.PLUS, this::createNewMember) {{
+        setTooltipText("Directly adds a new hunter to team. If hunter wants to start using the app later, a sign-in link can be shared.");
+    }};
 
     public TeamMembersView(Session session, OneTimeTokenService oneTimeTokenService, Dao service) {
         this.session = session;
         this.oneTimeTokenService = oneTimeTokenService;
         this.service = service;
+    }
+
+    public void createNewMember() {
+        User user = new User();
+        BrowserPrompt.promptString("Username")
+                .thenAccept(n -> {
+                    user.name = n;
+                    session.getCurrentTeam().hunters.add(user);
+                    user.teams.add(session.getCurrentTeam());
+                    service.saveNewUser(user);
+                    init();
+                });
     }
 
     @Override
@@ -78,32 +94,18 @@ public class TeamMembersView extends VerticalLayout {
             add(new Paragraph("Ongoing " + hunt.toString()));
             add(new VButton("Stop hunt", this::stopHunt));
         }
-        add(new VButton("Start new hunt", this::startHunt));
-        add(new HorizontalFloatLayout(
-                new VButton("Randomize remaining", this::randomize),
+        add(new HorizontalLayout(
+                new DefaultButton("Start new hunt", this::startHunt){{
+                    setIcon(VaadinIcon.PLAY.create());
+                }},
                 new DeleteButton("Reset", this::resetAssignments) {{
                     setConfirmationPrompt("Reset all assignments?");
                     setOkText("Reset");
-                }},
-                new Button("Quick add...") {{
-                    setTooltipText("Directly adds a new hunter to team. If hunter wants to start using the app later, a sign-in link can be shared.");
-                    addClickListener(e -> {
-                        User user = new User();
-                        BrowserPrompt.promptString("Username")
-                                .thenAccept(n -> {
-                                    user.name = n;
-                                    session.getCurrentTeam().hunters.add(user);
-                                    user.teams.add(session.getCurrentTeam());
-                                    service.saveNewUser(user);
-                                    init();
-                                });
-                    });
-                }},
-                new Button("Invite...", e-> {
-                    VNotification.prominent("TODO group invite link");
-                })
+                    setIcon(VaadinIcon.TRAIN.create());
+                }}
         ));
         add(activeTitle);
+        add(new VButton("Randomize remaining", this::randomize).withIcon(VaadinIcon.RANDOM.create()));
         add(unassigned);
         add(unassignedHr);
         add(assigned);
@@ -152,6 +154,11 @@ public class TeamMembersView extends VerticalLayout {
                 spots
         ));
         unassignedHr.setVisible(unassignedHunters > 0);
+    }
+
+    @Override
+    public List<Component> getButtons() {
+        return List.of(newMember);
     }
 
     static class Slot extends Div {

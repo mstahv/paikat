@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Route(layout = TopLayout.class)
-@MenuItem(order = MenuItem.END, icon = VaadinIcon.USER, title = "Your profile")
+@MenuItem(order = MenuItem.END - 1, icon = VaadinIcon.USER, title = "Your profile")
 @PermitAll
 public class Profile extends VerticalLayout {
 
