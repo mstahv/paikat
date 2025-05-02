@@ -1,0 +1,657 @@
+{
+  "comment" : "Generated with Maplibre Vaadin integration",
+  "version" : 8,
+  "name" : "Maastokartta",
+  "sprite" : [ {
+    "id" : "meri",
+    "url" : "https://virit.in/maastokartta/merisprite"
+  }, {
+    "id" : "topo",
+    "url" : "https://virit.in/maastokartta/toposprite"
+  } ],
+  "glyphs" : "https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf",
+  "sources" : {
+    "kk100" : {
+      "type" : "vector",
+      "url" : "https://fvtns.dokku1.parttio.org/services/korkeuskayra100"
+    },
+    "mtk" : {
+      "type" : "vector",
+      "url" : "https://fvtns.dokku1.parttio.org/services/mtk-combined",
+      "attribution" : "Maanmittauslaitos/Väylävirasto/Traficom latauspalvelut"
+    },
+    "kk20" : {
+      "type" : "vector",
+      "url" : "https://fvtns.dokku1.parttio.org/services/korkeuskayra20"
+    }
+  },
+  "layers" : [ {
+    "id" : "vesi-overall",
+    "type" : "fill",
+    "source" : "mtk",
+    "source-layer" : "vesi-overall",
+    "paint" : {
+      "fill-color" : [ "interpolate", [ "linear" ], [ "zoom" ], 6, "#023E9C", 11, "#80FFFE" ]
+    },
+    "maxzoom" : 11
+  }, {
+    "id" : "maatalousmaa-overall",
+    "type" : "fill",
+    "source" : "mtk",
+    "source-layer" : "maatalousmaa-overall",
+    "paint" : {
+      "fill-color" : "#FFD980"
+    },
+    "maxzoom" : 11
+  }, {
+    "id" : "taajaanrakennettualue-overall",
+    "type" : "fill",
+    "source" : "mtk",
+    "source-layer" : "taajaanrakennettualue-overall",
+    "paint" : {
+      "fill-color" : "#b2977e"
+    },
+    "maxzoom" : 11
+  }, {
+    "id" : "tieviiva-numeroidut-1r",
+    "type" : "line",
+    "source" : "mtk",
+    "source-layer" : "tieviiva-numeroidut-overall",
+    "filter" : [ "in", "kohdeluokka", 12111, 12112 ],
+    "paint" : {
+      "line-color" : "#000000",
+      "line-width" : [ "interpolate", [ "exponential", 1.55 ], [ "zoom" ], 6, 6, 20, 74 ]
+    },
+    "minzoom" : 0,
+    "maxzoom" : 11
+  }, {
+    "id" : "tieviiva-numeroidut-2r",
+    "type" : "line",
+    "source" : "mtk",
+    "source-layer" : "tieviiva-numeroidut-overall",
+    "filter" : [ "in", "kohdeluokka", 12121, 12122 ],
+    "paint" : {
+      "line-color" : "#000000",
+      "line-width" : [ "interpolate", [ "exponential", 1.55 ], [ "zoom" ], 6, 4, 20, 53 ]
+    },
+    "minzoom" : 6,
+    "maxzoom" : 10
+  }, {
+    "id" : "tieviiva-numeroidut-3r",
+    "type" : "line",
+    "source" : "mtk",
+    "source-layer" : "tieviiva-numeroidut-overall",
+    "filter" : [ "in", "kohdeluokka", 12131, 12132 ],
+    "paint" : {
+      "line-color" : "#000000",
+      "line-width" : [ "interpolate", [ "exponential", 1.55 ], [ "zoom" ], 6, 3, 20, 30 ]
+    },
+    "minzoom" : 9,
+    "maxzoom" : 11
+  }, {
+    "id" : "tieviiva-numeroidut-1f",
+    "type" : "line",
+    "source" : "mtk",
+    "source-layer" : "tieviiva-numeroidut-overall",
+    "filter" : [ "in", "kohdeluokka", 12111, 12112 ],
+    "paint" : {
+      "line-color" : "#BB271A",
+      "line-width" : [ "interpolate", [ "exponential", 1.55 ], [ "zoom" ], 3, 4, 20, 70 ]
+    },
+    "minzoom" : 0,
+    "maxzoom" : 11
+  }, {
+    "id" : "tieviiva-numeroidut-2f",
+    "type" : "line",
+    "source" : "mtk",
+    "source-layer" : "tieviiva-numeroidut-overall",
+    "filter" : [ "in", "kohdeluokka", 12121, 12122 ],
+    "paint" : {
+      "line-color" : "#BB271A",
+      "line-width" : [ "interpolate", [ "exponential", 1.55 ], [ "zoom" ], 3, 2.5, 20, 50 ]
+    },
+    "minzoom" : 6,
+    "maxzoom" : 11
+  }, {
+    "id" : "tieviiva-numeroidut-3f",
+    "type" : "line",
+    "source" : "mtk",
+    "source-layer" : "tieviiva-numeroidut-overall",
+    "filter" : [ "in", "kohdeluokka", 12131, 12132 ],
+    "paint" : {
+      "line-color" : "#BB271A",
+      "line-width" : [ "interpolate", [ "exponential", 1.55 ], [ "zoom" ], 6, 1.5, 20, 30 ]
+    },
+    "minzoom" : 9,
+    "maxzoom" : 11
+  }, {
+    "id" : "valtakunnanraja-overall",
+    "type" : "line",
+    "source" : "mtk",
+    "source-layer" : "valtakunnanraja-overall",
+    "paint" : {
+      "line-color" : "#4D00B3",
+      "line-width" : 3.0
+    }
+  }, {
+    "id" : "vesi-all",
+    "type" : "fill",
+    "source" : "mtk",
+    "source-layer" : "vesi-all",
+    "paint" : {
+      "fill-color" : "#80FFFE"
+    }
+  }, {
+    "id" : "vesikuoppa",
+    "type" : "symbol",
+    "source" : "mtk",
+    "source-layer" : "vesikuoppa",
+    "layout" : {
+      "text-field" : "V",
+      "text-font" : [ "Open Sans Semibold" ],
+      "text-allow-overlap" : true
+    },
+    "paint" : {
+      "text-color" : "#3C98CA"
+    }
+  }, {
+    "id" : "allas",
+    "type" : "fill",
+    "source" : "mtk",
+    "source-layer" : "allas",
+    "paint" : {
+      "fill-color" : "#80FFFE"
+    }
+  }, {
+    "id" : "soistuma",
+    "type" : "fill",
+    "source" : "mtk",
+    "source-layer" : "soistuma",
+    "paint" : {
+      "fill-color" : "#E6F4F5"
+    }
+  }, {
+    "id" : "suo",
+    "type" : "fill",
+    "source" : "mtk",
+    "source-layer" : "suo",
+    "filter" : [ "any", [ "==", "kohdeluokka", 35412 ], [ "==", "kohdeluokka", 3522 ] ],
+    "paint" : {
+      "fill-color" : "#BEECEC"
+    }
+  }, {
+    "id" : "avosuo",
+    "type" : "fill",
+    "source" : "mtk",
+    "source-layer" : "suo",
+    "filter" : [ "any", [ "==", "kohdeluokka", 35411 ], [ "==", "kohdeluokka", 35421 ] ],
+    "paint" : {
+      "fill-color" : [ "case", [ "==", [ "get", "kohdeluokka" ], 35421 ], "#A9D785", "#D1CC41" ]
+    }
+  }, {
+    "id" : "muuavoinalue",
+    "type" : "fill",
+    "source" : "mtk",
+    "source-layer" : "muuavoinalue",
+    "paint" : {
+      "fill-color" : "rgba(255, 255, 130, 1.0)"
+    }
+  }, {
+    "id" : "taytemaa",
+    "type" : "fill",
+    "source" : "mtk",
+    "source-layer" : "taytemaa",
+    "paint" : {
+      "fill-color" : "#E8D9A5"
+    }
+  }, {
+    "id" : "taajaanrakennettualue",
+    "type" : "fill",
+    "source" : "mtk",
+    "source-layer" : "taajaanrakennettualue",
+    "paint" : {
+      "fill-color" : "#b2977e"
+    },
+    "maxzoom" : 12
+  }, {
+    "id" : "maatalousmaa",
+    "type" : "fill",
+    "source" : "mtk",
+    "source-layer" : "maatalousmaa",
+    "paint" : {
+      "fill-color" : [ "case", [ "==", [ "get", "kohdeluokka" ], 32612 ], "#bbd897", [ "==", [ "get", "kohdeluokka" ], 32800 ], "#FDF27C", "#FFD980" ]
+    }
+  }, {
+    "id" : "puisto",
+    "type" : "fill",
+    "source" : "mtk",
+    "source-layer" : "puisto",
+    "paint" : {
+      "fill-color" : "#FDF27C"
+    }
+  }, {
+    "id" : "urheilujavirkistysalue",
+    "type" : "fill",
+    "source" : "mtk",
+    "source-layer" : "urheilujavirkistysalue",
+    "paint" : {
+      "fill-color" : "#d4efb3"
+    }
+  }, {
+    "id" : "hietikko",
+    "type" : "fill",
+    "source" : "mtk",
+    "source-layer" : "hietikko",
+    "paint" : {
+      "fill-color" : "#e8e8b0"
+    }
+  }, {
+    "id" : "louhos",
+    "type" : "fill",
+    "source" : "mtk",
+    "source-layer" : "louhos",
+    "paint" : {
+      "fill-color" : "#dde5dd"
+    }
+  }, {
+    "id" : "kallioalue",
+    "type" : "fill",
+    "source" : "mtk",
+    "source-layer" : "kallioalue",
+    "paint" : {
+      "fill-color" : "#c6c6c6"
+    }
+  }, {
+    "id" : "maastokuvionreuna",
+    "type" : "line",
+    "source" : "mtk",
+    "source-layer" : "maastokuvionreuna",
+    "filter" : [ "all", [ "==", "kohdeluokka", 30211 ], [ "any", [ "==", "kartografinenluokka", 32611 ], [ "==", "kartografinenluokka", 32612 ] ] ],
+    "paint" : {
+      "line-color" : "#000000",
+      "line-width" : 0.7
+    },
+    "minzoom" : 12
+  }, {
+    "id" : "lentokenttaalue",
+    "type" : "fill",
+    "source" : "mtk",
+    "source-layer" : "lentokenttaalue",
+    "paint" : {
+      "fill-color" : [ "case", [ "==", [ "get", "kohdeluokka" ], 32411 ], "#F26161", [ "==", [ "get", "kohdeluokka" ], 32412 ], "#F26161", [ "==", [ "get", "kohdeluokka" ], 32413 ], "#FFFF8C", [ "==", [ "get", "kohdeluokka" ], 32415 ], "#FFFF8C", [ "==", [ "get", "kohdeluokka" ], 32416 ], "#FFFF8C", [ "==", [ "get", "kohdeluokka" ], 32441 ], "#FFFF8C", [ "==", [ "get", "kohdeluokka" ], 32442 ], "#FFFF8C", [ "==", [ "get", "kohdeluokka" ], 32414 ], "#FFE680", [ "==", [ "get", "kohdeluokka" ], 32417 ], "#FFE680", [ "==", [ "get", "kohdeluokka" ], 32418 ], "#FFE680", "#D1CC41" ]
+    }
+  }, {
+    "id" : "virtavesikapea",
+    "type" : "line",
+    "source" : "mtk",
+    "source-layer" : "virtavesikapea",
+    "paint" : {
+      "line-color" : "#0099FF",
+      "line-width" : [ "case", [ "==", [ "get", "kohdeluokka" ], 36312 ], 2, 1 ]
+    },
+    "minzoom" : 12
+  }, {
+    "id" : "erityisalueenreuna",
+    "type" : "line",
+    "source" : "mtk",
+    "source-layer" : "maastokuvionreuna",
+    "filter" : [ "in", "kartografinenluokka", 32200, 32300, 32411, 32412, 32413, 32414, 32415, 32416, 32417, 32418, 33100 ],
+    "paint" : {
+      "line-color" : "#000000",
+      "line-width" : [ "interpolate", [ "linear" ], [ "zoom" ], 10, 0.05, 16, 2.0 ]
+    },
+    "minzoom" : 12
+  }, {
+    "id" : "ajotie",
+    "type" : "line",
+    "source" : "mtk",
+    "source-layer" : "tieviiva-muut",
+    "filter" : [ "any", [ "==", "kohdeluokka", 12141 ], [ "==", "kohdeluokka", 12121 ], [ "==", "kohdeluokka", 12122 ], [ "==", "kohdeluokka", 12131 ], [ "==", "kohdeluokka", 12132 ] ],
+    "paint" : {
+      "line-color" : "rgba(14, 14, 14, 1.0)",
+      "line-width" : [ "interpolate", [ "exponential", 1.55 ], [ "zoom" ], 6, 0.7, 20, 20 ]
+    },
+    "minzoom" : 11
+  }, {
+    "id" : "ajopolku",
+    "type" : "line",
+    "source" : "mtk",
+    "source-layer" : "tieviiva-muut",
+    "filter" : [ "any", [ "==", "kohdeluokka", 12316 ], [ "==", "kohdeluokka", 12313 ] ],
+    "paint" : {
+      "line-color" : "rgba(14, 14, 14, 1.0)",
+      "line-width" : [ "interpolate", [ "exponential", 1.55 ], [ "zoom" ], 6, 0.7, 20, 20 ],
+      "line-dasharray" : [ 8, 2 ]
+    },
+    "minzoom" : 12
+  }, {
+    "id" : "org.vaadin.addons.maplibre.finnishterrainmap.Tie1A1BReuna",
+    "type" : "line",
+    "source" : "mtk",
+    "source-layer" : "tieviiva-numeroidut",
+    "filter" : [ "in", "kohdeluokka", 12111, 12112 ],
+    "paint" : {
+      "line-color" : "#000000",
+      "line-width" : [ "interpolate", [ "exponential", 1.55 ], [ "zoom" ], 6, 6, 20, 74 ]
+    },
+    "minzoom" : 11
+  }, {
+    "id" : "org.vaadin.addons.maplibre.finnishterrainmap.Tie2A2BReuna",
+    "type" : "line",
+    "source" : "mtk",
+    "source-layer" : "tieviiva-numeroidut",
+    "filter" : [ "in", "kohdeluokka", 12121, 12122 ],
+    "paint" : {
+      "line-color" : "#000000",
+      "line-width" : [ "interpolate", [ "exponential", 1.55 ], [ "zoom" ], 6, 4, 20, 53 ]
+    },
+    "minzoom" : 11
+  }, {
+    "id" : "org.vaadin.addons.maplibre.finnishterrainmap.Tie2ReunaNumeroimaton",
+    "type" : "line",
+    "source" : "mtk",
+    "source-layer" : "tieviiva-muut",
+    "filter" : [ "in", "kohdeluokka", 12121, 12122 ],
+    "paint" : {
+      "line-color" : "#000000",
+      "line-width" : [ "interpolate", [ "exponential", 1.55 ], [ "zoom" ], 6, 4, 20, 53 ]
+    },
+    "minzoom" : 11
+  }, {
+    "id" : "org.vaadin.addons.maplibre.finnishterrainmap.Tie3A3BReuna",
+    "type" : "line",
+    "source" : "mtk",
+    "source-layer" : "tieviiva-numeroidut",
+    "filter" : [ "in", "kohdeluokka", 12131, 12132 ],
+    "paint" : {
+      "line-color" : "#000000",
+      "line-width" : [ "interpolate", [ "exponential", 1.55 ], [ "zoom" ], 6, 3, 20, 30 ]
+    },
+    "minzoom" : 11
+  }, {
+    "id" : "org.vaadin.addons.maplibre.finnishterrainmap.Tie3ReunaNumeroimaton",
+    "type" : "line",
+    "source" : "mtk",
+    "source-layer" : "tieviiva-muut",
+    "filter" : [ "in", "kohdeluokka", 12131, 12132 ],
+    "paint" : {
+      "line-color" : "#000000",
+      "line-width" : [ "interpolate", [ "exponential", 1.55 ], [ "zoom" ], 6, 3, 20, 30 ]
+    },
+    "minzoom" : 11
+  }, {
+    "id" : "org.vaadin.addons.maplibre.finnishterrainmap.Tie1A1BFill",
+    "type" : "line",
+    "source" : "mtk",
+    "source-layer" : "tieviiva-numeroidut",
+    "filter" : [ "in", "kohdeluokka", 12111, 12112 ],
+    "paint" : {
+      "line-color" : "#BB271A",
+      "line-width" : [ "interpolate", [ "exponential", 1.55 ], [ "zoom" ], 3, 4, 20, 70 ]
+    },
+    "minzoom" : 11
+  }, {
+    "id" : "org.vaadin.addons.maplibre.finnishterrainmap.Tie2A2BFill",
+    "type" : "line",
+    "source" : "mtk",
+    "source-layer" : "tieviiva-numeroidut",
+    "filter" : [ "in", "kohdeluokka", 12121, 12122 ],
+    "paint" : {
+      "line-color" : "#BB271A",
+      "line-width" : [ "interpolate", [ "exponential", 1.55 ], [ "zoom" ], 3, 2.5, 20, 50 ]
+    },
+    "minzoom" : 11
+  }, {
+    "id" : "org.vaadin.addons.maplibre.finnishterrainmap.Tie2Numeroimaton",
+    "type" : "line",
+    "source" : "mtk",
+    "source-layer" : "tieviiva-muut",
+    "filter" : [ "in", "kohdeluokka", 12121, 12122 ],
+    "paint" : {
+      "line-color" : "#BB271A",
+      "line-width" : [ "interpolate", [ "exponential", 1.55 ], [ "zoom" ], 3, 2.5, 20, 50 ]
+    },
+    "minzoom" : 11
+  }, {
+    "id" : "org.vaadin.addons.maplibre.finnishterrainmap.Tie3A3BFill",
+    "type" : "line",
+    "source" : "mtk",
+    "source-layer" : "tieviiva-numeroidut",
+    "filter" : [ "in", "kohdeluokka", 12131, 12132 ],
+    "paint" : {
+      "line-color" : "#BB271A",
+      "line-width" : [ "interpolate", [ "exponential", 1.55 ], [ "zoom" ], 6, 1.5, 20, 30 ]
+    },
+    "minzoom" : 11
+  }, {
+    "id" : "org.vaadin.addons.maplibre.finnishterrainmap.Tie3Numeroimaton",
+    "type" : "line",
+    "source" : "mtk",
+    "source-layer" : "tieviiva-muut",
+    "filter" : [ "in", "kohdeluokka", 12131, 12132 ],
+    "paint" : {
+      "line-color" : "#BB271A",
+      "line-width" : [ "interpolate", [ "exponential", 1.55 ], [ "zoom" ], 6, 1.5, 20, 30 ]
+    },
+    "minzoom" : 11
+  }, {
+    "id" : "rakennus",
+    "type" : "fill",
+    "source" : "mtk",
+    "source-layer" : "rakennus",
+    "paint" : {
+      "fill-color" : "#333333"
+    }
+  }, {
+    "id" : "sahkolinja",
+    "type" : "line",
+    "source" : "mtk",
+    "source-layer" : "sahkolinja",
+    "paint" : {
+      "line-color" : "#666",
+      "line-width" : 0.75
+    },
+    "minzoom" : 13
+  }, {
+    "id" : "1cc4354f-1621-458d-80de-87673b47f591",
+    "type" : "circle",
+    "source" : "mtk",
+    "source-layer" : "suurjannitelinjanpylvas",
+    "paint" : {
+      "circle-color" : "white",
+      "circle-stroke-color" : "black",
+      "circle-radius" : 5.0,
+      "circle-stroke-width" : 1.0
+    },
+    "minzoom" : 14
+  }, {
+    "id" : "a157f9ff-c3c1-47a6-8d54-f64ecd5f366a",
+    "type" : "circle",
+    "source" : "mtk",
+    "source-layer" : "muuntaja",
+    "paint" : {
+      "circle-color" : "white",
+      "circle-stroke-color" : "black",
+      "circle-radius" : 5.0,
+      "circle-stroke-width" : 1.0
+    },
+    "minzoom" : 14
+  }, {
+    "id" : "45c065f8-ddba-49f9-afea-9ab8f7ee3cda",
+    "type" : "symbol",
+    "source" : "mtk",
+    "source-layer" : "sahkolinjansymboli",
+    "layout" : {
+      "text-field" : "Z",
+      "text-size" : 12.0
+    },
+    "paint" : {
+      "text-halo-color" : "white",
+      "text-halo-width" : 1
+    },
+    "minzoom" : 12
+  }, {
+    "id" : "autoliikennealue",
+    "type" : "fill",
+    "source" : "mtk",
+    "source-layer" : "autoliikennealue",
+    "paint" : {
+      "fill-color" : "rgba(203, 143, 101, 1.0)"
+    }
+  }, {
+    "id" : "kivi",
+    "type" : "symbol",
+    "source" : "mtk",
+    "source-layer" : "kivi",
+    "layout" : {
+      "text-field" : "T",
+      "text-font" : [ "Open Sans Semibold" ],
+      "text-rotate" : 180
+    }
+  }, {
+    "id" : "jyrkanne",
+    "type" : "line",
+    "source" : "mtk",
+    "source-layer" : "jyrkanne",
+    "paint" : {
+      "line-color" : "#444",
+      "line-width" : [ "interpolate", [ "exponential", 1.55 ], [ "zoom" ], 6, 0.7, 20, 20 ]
+    },
+    "minzoom" : 13
+  }, {
+    "id" : "pistolaituriviiva",
+    "type" : "line",
+    "source" : "mtk",
+    "source-layer" : "pistolaituriviiva",
+    "paint" : {
+      "line-color" : "#000",
+      "line-width" : [ "interpolate", [ "exponential", 1.55 ], [ "zoom" ], 6, 0.7, 20, 20 ]
+    },
+    "minzoom" : 13
+  }, {
+    "id" : "kaislikko",
+    "type" : "symbol",
+    "source" : "mtk",
+    "source-layer" : "kaislikko",
+    "layout" : {
+      "text-field" : "\\|/",
+      "text-size" : [ "interpolate", [ "linear" ], [ "zoom" ], 11, 1, 20, 40 ]
+    },
+    "paint" : {
+      "text-color" : "#666"
+    }
+  }, {
+    "id" : "tekstikunnannimi",
+    "type" : "symbol",
+    "source" : "mtk",
+    "source-layer" : "paikannimi",
+    "filter" : [ "==", "kohdeluokka", 48111 ],
+    "layout" : {
+      "text-field" : "{teksti}",
+      "text-font" : [ "Open Sans Semibold" ],
+      "text-size" : 14
+    },
+    "paint" : {
+      "text-color" : "#000",
+      "text-halo-color" : "#fff",
+      "text-halo-width" : 1
+    }
+  }, {
+    "id" : "tekstimajorcity",
+    "type" : "symbol",
+    "source" : "mtk",
+    "source-layer" : "paakaupungit",
+    "layout" : {
+      "text-field" : "{teksti}",
+      "text-font" : [ "Open Sans Semibold" ],
+      "text-size" : 16
+    },
+    "paint" : {
+      "text-color" : "#000",
+      "text-halo-color" : "#fff",
+      "text-halo-width" : 1
+    }
+  }, {
+    "id" : "veden-reuna",
+    "type" : "line",
+    "source" : "mtk",
+    "source-layer" : "maastokuvionreuna",
+    "filter" : [ "all", [ "==", "kohdeluokka", 30211 ], [ "any", [ "==", "kartografinenluokka", 36211 ], [ "==", "kartografinenluokka", 36200 ], [ "==", "kartografinenluokka", 36313 ] ] ],
+    "paint" : {
+      "line-color" : "#3C98CA"
+    },
+    "minzoom" : 12
+  }, {
+    "id" : "allasreuna",
+    "type" : "line",
+    "source" : "mtk",
+    "source-layer" : "rakennusreunaviiva",
+    "filter" : [ "==", "kohdeluokka", 44300 ],
+    "paint" : {
+      "line-color" : "#3C98CA"
+    },
+    "minzoom" : 12
+  }, {
+    "id" : "veden-reuna-es",
+    "type" : "line",
+    "source" : "mtk",
+    "source-layer" : "maastokuvionreuna",
+    "filter" : [ "all", [ "==", "kohdeluokka", 30212 ], [ "any", [ "==", "kartografinenluokka", 36211 ], [ "==", "kartografinenluokka", 36200 ], [ "==", "kartografinenluokka", 36313 ] ] ],
+    "paint" : {
+      "line-color" : "#3C98CA",
+      "line-dasharray" : [ 2, 2 ]
+    },
+    "minzoom" : 12
+  }, {
+    "id" : "kk100",
+    "type" : "line",
+    "source" : "kk100",
+    "source-layer" : "korkeuskayra100",
+    "paint" : {
+      "line-color" : "rgba(164, 50, 50, 0.5)",
+      "line-width" : [ "interpolate", [ "linear" ], [ "zoom" ], 6, 0.001, 8, 0.5 ]
+    },
+    "minzoom" : 6,
+    "maxzoom" : 9
+  }, {
+    "id" : "kk20",
+    "type" : "line",
+    "source" : "kk20",
+    "source-layer" : "korkeuskayra20",
+    "paint" : {
+      "line-color" : [ "interpolate", [ "linear" ], [ "zoom" ], 9, "rgba(164, 50, 50, 0.0)", 12, "rgba(164, 50, 50, 0.5)", 13, "rgba(164, 50, 50, 0.0)" ],
+      "line-width" : [ "interpolate", [ "linear" ], [ "zoom" ], 6, 0.001, 11, 1.0 ]
+    },
+    "maxzoom" : 13
+  }, {
+    "id" : "korkeuskayra",
+    "type" : "line",
+    "source" : "mtk",
+    "source-layer" : "korkeuskayra",
+    "paint" : {
+      "line-color" : [ "interpolate", [ "linear" ], [ "zoom" ], 12, "rgba(164, 50, 50, 0.0)", 13, "rgba(164, 50, 50, 1.0)" ],
+      "line-width" : [ "interpolate", [ "linear" ], [ "zoom" ], 10, 0.05, 16, 2.0 ]
+    },
+    "filter" : [ "==", [ "%", [ "get", "korkeusarvo" ], 5000 ], 0 ]
+  }, {
+    "id" : "apukayra",
+    "type" : "line",
+    "source" : "mtk",
+    "source-layer" : "korkeuskayra",
+    "paint" : {
+      "line-color" : [ "interpolate", [ "linear" ], [ "zoom" ], 12, "rgba(164, 50, 50, 0.0)", 13, "rgba(164, 50, 50, 1.0)" ],
+      "line-width" : [ "interpolate", [ "linear" ], [ "zoom" ], 10, 0.03, 16, 1.2 ]
+    },
+    "filter" : [ "==", [ "%", [ "get", "korkeusarvo" ], 5000 ], 2500 ]
+  }, {
+    "id" : "vesikivikko",
+    "type" : "line",
+    "source" : "mtk",
+    "source-layer" : "vesikivikko",
+    "paint" : {
+      "line-color" : "rgba(0, 0, 0, 0.5)",
+      "line-width" : 1.0,
+      "line-dasharray" : [ 1, 1 ]
+    }
+  } ]
+}

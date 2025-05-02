@@ -2,7 +2,6 @@ package at.paik;
 
 import at.paik.domain.MapStyle;
 import at.paik.domain.Team;
-import at.paik.finnishterrainmap.LocalMaastokartta;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,7 +27,12 @@ public class BaseMapConfig {
 
             switch (mapStyle) {
                 case Maptiler_OSM -> map.initStyle("https://api.maptiler.com/maps/streets/style.json?key=6c5QDyG7DyFdqb74rjI5");
-                case FinlandNLS -> LocalMaastokartta.CONFIG.configure(map);
+                case FinlandNLS -> {
+                    map.initStyle(getClass().getResourceAsStream("/maastokartta.json"));
+                    // TODO refactor the remaining into LocalMapDef, only static stuff there...
+                    map.setCenter(22.25, 60.17);
+                    map.setZoomLevel(12);
+                }
             }
         };
     }
