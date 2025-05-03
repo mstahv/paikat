@@ -77,7 +77,7 @@ public class Dao {
         User user = new User();
         user.name = usernameValue;
         getData().users.add(user);
-        storeData();
+        storageManager.store(getData().users);
         return user;
     }
 }
