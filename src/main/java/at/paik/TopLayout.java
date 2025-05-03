@@ -55,11 +55,9 @@ public class TopLayout extends MainLayout {
 
                 GeolocationOptions geolocationOptions = new GeolocationOptions();
                 geolocationOptions.setEnableHighAccuracy(true);
-                geolocationOptions.setMaximumAge(10*1000);
                 Geolocation.watchPosition(update -> {
                             this.geolocation = update;
                             session.saveLocation(update);
-                            System.out.println("Geo update for " + u.getName() + " " + update.toString());
                         },
                         error -> {
                             System.out.println("Geolocation error : " + error.getErrorMessage() + " " + error.getError());
