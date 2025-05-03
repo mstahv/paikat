@@ -6,6 +6,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.vaadin.addons.maplibre.BaseMapConfigurer;
+import org.vaadin.addons.maplibre.dto.FitBoundsOptions;
 
 @Configuration
 public class BaseMapConfig {
@@ -33,8 +34,9 @@ public class BaseMapConfig {
             }
 
             session.getMapViewport().ifPresent(viewPort -> {
-                // TODO make MapLibre add-on support configurable animations
-                map.fitBounds(viewPort.getBounds());
+                map.fitBounds(viewPort.getBounds(),new FitBoundsOptions(){{
+                    setAnimate(false);
+                }});
             });
 
         };
