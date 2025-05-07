@@ -107,11 +107,12 @@ public class MainView extends VVerticalLayout implements Consumer<HuntStatusEven
                 webPush.subscriptionExists(current, registered -> {
                     if(registered) {
                         add(new Paragraph("You have web push notifications enabled on this device, you'll be notified even if the application is closed."));
-                    /* TODO this should never happen :-) )
-                        if(registered && webPushService.isEmpty()) {
-                            webPush.fetchExistingSubscription(ui, webPushService::store);
+                        if(registered && session.user().get().webPushSubscriptions.isEmpty()) {
+                            /* TODO this should never happen :-) and technically empty check is not enough if a developer loses the subscription as there can be multiple devices and subscriptions for same user...  */
+                            webPush.fetchExistingSubscription(ui, subscription -> {
+                                session.saveWebPushSubscription(subscription);
+                            });
                         }
-                     */
                     } else {
                         add(new VButton("Subscribe for notifications...", e-> {
                             webPush.subscribe(ui, subscription -> {
