@@ -1,6 +1,5 @@
 package at.paik;
 
-import at.paik.domain.User;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.HasElement;
 import com.vaadin.flow.component.button.Button;
@@ -8,9 +7,6 @@ import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.dom.Style;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.vaadin.firitin.appframework.MainLayout;
 import org.vaadin.firitin.geolocation.Geolocation;
 import org.vaadin.firitin.geolocation.GeolocationEvent;
@@ -21,7 +17,7 @@ public class TopLayout extends MainLayout {
     private final Session session;
     private GeolocationEvent geolocation;
 
-    private  HorizontalLayout actions = new HorizontalLayout(){{
+    private HorizontalLayout actions = new HorizontalLayout() {{
         getStyle().setPosition(Style.Position.ABSOLUTE);
         getStyle().setRight("1em");
     }};
@@ -35,38 +31,30 @@ public class TopLayout extends MainLayout {
         return "Paik.at }>";
     }
 
-
     @Override
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
 
-        SecurityContext context = SecurityContextHolder.getContext();
-        Authentication authentication = context.getAuthentication();
-        if (authentication != null) {
-            Object principal = authentication.getPrincipal();
-            if (principal instanceof User u) {
-                addToDrawer(new HorizontalLayout(){{
-                    setPadding(true);
-                    add(new Paragraph(u.getUsername()));
-                    add(new Button(VaadinIcon.EXIT.create(), e -> {
+        session.user().ifPresent(u -> {
+                    addToDrawer(new HorizontalLayout() {{
+                        setPadding(true);
+                        add(new Paragraph(u.getUsername()));
+                        add(new Button(VaadinIcon.EXIT.create(), e -> {
                             session.logout();
                         }));
-                }});
+                    }});
 
-                GeolocationOptions geolocationOptions = new GeolocationOptions();
-                geolocationOptions.setEnableHighAccuracy(true);
-                Geolocation.watchPosition(update -> {
-                            this.geolocation = update;
-                            session.saveLocation(update);
-                        },
-                        error -> {
-                            System.out.println("Geolocation error : " + error.getErrorMessage() + " " + error.getError());
-                        }, geolocationOptions);
-
-            } else {
-                addToDrawer(new Paragraph(""+principal));
-            }
-        }
+                    GeolocationOptions geolocationOptions = new GeolocationOptions();
+                    geolocationOptions.setEnableHighAccuracy(true);
+                    Geolocation.watchPosition(update -> {
+                                this.geolocation = update;
+                                session.saveLocation(update);
+                            },
+                            error -> {
+                                System.out.println("Geolocation error : " + error.getErrorMessage() + " " + error.getError());
+                            }, geolocationOptions);
+                }
+        );
 
     }
 

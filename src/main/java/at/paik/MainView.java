@@ -64,6 +64,7 @@ public class MainView extends VVerticalLayout implements Consumer<HuntStatusEven
         removeAll();
         Team currentTeam = session.getCurrentTeam();
         add(new H1(currentTeam.name));
+        // TODO redesing this view to be more intuitive
         currentTeam.getActiveHunt().ifPresentOrElse(h -> {
             hunt = h;
 

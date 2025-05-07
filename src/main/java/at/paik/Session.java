@@ -68,7 +68,14 @@ public class Session {
     }
 
     public Optional<User> user() {
-        return authenticationContext.getAuthenticatedUser(User.class);
+        try {
+            return authenticationContext.getAuthenticatedUser(User.class);
+        } catch (ClassCastException e) {
+            // session expired, dig the User via JwtToken...
+            var jwt = authenticationContext.getAuthenticatedUser(org.springframework.security.oauth2.jwt.Jwt.class).get();
+            String username = jwt.getSubject();
+            return dao.findByUsername(username);
+        }
     }
 
     public void logout() {

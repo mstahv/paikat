@@ -11,6 +11,7 @@ import org.springframework.security.web.webauthn.api.CredentialRecord;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.Optional;
 
 @Service
 public class Dao {
@@ -93,5 +94,9 @@ public class Dao {
         getData().users.stream().forEach(u -> teams.addAll(u.teams));
         return "There are %s users and %s teams currently in the system."
                 .formatted(users, teams.size());
+    }
+
+    public Optional<User> findByUsername(String username) {
+        return getData().users.stream().filter(u -> u.getUsername().equals(username)).findAny();
     }
 }

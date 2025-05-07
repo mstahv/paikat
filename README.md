@@ -51,3 +51,7 @@ Then expose these environment variables (or use put them to application.properti
     export WEBPUSH_PRIVATEKEY=Rv5iqzJVhEyYatsEdaLwrUn5RWVSwK7RDDzMakPcT2g
     export WEBPUSH_SUBJECT=mailto:your@email.com
 
+Also, in case you plan to deploy your own instance of this app, you should override the random key used for stateless 
+JWT authentication with your own random key (this sets the hardcoded key used for demo):
+
+    export JWT_AUTH_SECRET=u30vWDWbkG/ZKtBeYipTD5tQ4Rwso8mRSpxemlFk3Cc=

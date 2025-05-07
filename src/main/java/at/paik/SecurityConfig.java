@@ -11,6 +11,7 @@ import org.springframework.security.authentication.ott.InMemoryOneTimeTokenServi
 import org.springframework.security.authentication.ott.OneTimeTokenService;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.oauth2.jose.jws.JwsAlgorithms;
 import org.springframework.security.web.authentication.ott.OneTimeTokenGenerationSuccessHandler;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
@@ -27,7 +28,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.crypto.spec.SecretKeySpec;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -39,8 +42,19 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @Configuration
 public class SecurityConfig extends VaadinWebSecurity {
 
+    // ATTENTION: define this as environment variable for actual deployments, implemented like this
+    // to make this demo easier to start
+    @Value("${jwt.auth.secret:u30vWDWbkG/ZKtBeYipTD5tQ4Rwso8mRSpxemlFk3Cc=}")
+    private String authSecret;
+
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+
+        setStatelessAuthentication(http, new SecretKeySpec(Base64.getDecoder().decode(authSecret), JwsAlgorithms.HS256),
+                "at.paikat",
+                60*60*24*7 /* Even if servlet session expires, login will be valid for about a week */
+        );
         // Delegating the responsibility of general configurations
         // of http security to the super class. It's configuring
         // the followings: Vaadin's CSRF protection by ignoring
@@ -58,6 +72,7 @@ public class SecurityConfig extends VaadinWebSecurity {
 
         http.authorizeHttpRequests(auth -> auth.requestMatchers(
                         new AntPathRequestMatcher("/public/**"),
+                        new AntPathRequestMatcher("/store-data/**"), // This must not stay here for production deployment!!
                         new AntPathRequestMatcher(("/my-ott-submit")))
                 .permitAll());
 

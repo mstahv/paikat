@@ -102,6 +102,7 @@ public class MapView extends VerticalLayout implements Consumer<LocationUpdate>,
                 trackerMarker.getMarker().setPopover(() -> new Paragraph(h.getName() + " TODO show status, movement etcs"));
             }
         }
+        map.fitToContent();
     }
 
     private TrackerMarker getTrackerMarker(User h) {
