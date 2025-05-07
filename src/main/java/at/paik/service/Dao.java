@@ -10,6 +10,8 @@ import org.springframework.context.event.EventListener;
 import org.springframework.security.web.webauthn.api.CredentialRecord;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
+
 @Service
 public class Dao {
 
@@ -83,5 +85,13 @@ public class Dao {
 
     public void saveSubscriptions(User user) {
         storageManager.storeAll(user, user.webPushSubscriptions);
+    }
+
+    public String dataSummary() {
+        int users = getData().users.size();
+        var teams = new HashSet<Team>();
+        getData().users.stream().forEach(u -> teams.addAll(u.teams));
+        return "There are %s users and %s teams currently in the system."
+                .formatted(users, teams.size());
     }
 }

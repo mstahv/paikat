@@ -102,6 +102,7 @@ public class LoginView extends VVerticalLayout {
 
             }
         }});
+        add(new Paragraph(dao.dataSummary()));
     }
 
     public static class RegistrationAuthenticationToken extends UsernamePasswordAuthenticationToken {
