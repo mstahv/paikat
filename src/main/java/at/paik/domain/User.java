@@ -1,6 +1,7 @@
 package at.paik.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.vaadin.flow.server.webpush.WebPushSubscription;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.webauthn.api.Bytes;
@@ -24,6 +25,7 @@ public class User implements PublicKeyCredentialUserEntity, UserDetails {
     // This will generate circular reference with Jackson (use with WebAuthn)
     @JsonIgnore
     public Set<Team> teams = new HashSet<>();
+    public Set<WebPushSubscription> webPushSubscriptions = new HashSet<>();
     public Map<Bytes, CredentialRecord> passkeys = new HashMap<>();
     @JsonIgnore
     public Team lastTeam;

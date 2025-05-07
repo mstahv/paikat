@@ -21,9 +21,15 @@ import java.util.function.Consumer;
 @Service
 public class TeamEventDistributor {
 
+    private final NotificationService notificationService;
+
     private HashMap<Team, List<Consumer<HuntStatusEvent>>> teamToListeners = new HashMap();
     private HashMap<Team, List<Consumer<LocationUpdate>>> teamToLocationListeners = new HashMap();
     private WeakHashMap<Component, UI> componentToUi = new WeakHashMap<>();
+
+    public TeamEventDistributor(NotificationService notificationService) {
+        this.notificationService = notificationService;
+    }
 
     public void register(Team team, Consumer<HuntStatusEvent> component) {
         Component c = (Component) component;
@@ -70,5 +76,7 @@ public class TeamEventDistributor {
                 });
             });
         }
+        // TODO this could be conditional for users, if we know somehow that UI is open/active
+        notificationService.teamWideMessage(event.getHunt().getTeam().name + "", "Hunt begins!!", team);
     }
 }

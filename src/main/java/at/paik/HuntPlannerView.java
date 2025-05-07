@@ -2,8 +2,10 @@ package at.paik;
 
 import at.paik.domain.Hunt;
 import at.paik.domain.Spot;
+import at.paik.domain.Team;
 import at.paik.domain.User;
 import at.paik.service.Dao;
+import at.paik.service.NotificationService;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
@@ -17,7 +19,6 @@ import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.dom.Style;
 import com.vaadin.flow.router.Route;
 import jakarta.annotation.security.PermitAll;
@@ -40,14 +41,15 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Route(layout = TopLayout.class)
-@MenuItem(title = "Team & Assignments", icon = VaadinIcon.USERS, order = MenuItem.BEGINNING + 1, parent = AdminViews.class)
+@MenuItem(icon = VaadinIcon.USERS, order = MenuItem.BEGINNING + 1, parent = AdminViews.class)
 @PermitAll
-public class TeamMembersView extends VerticalLayout implements ActionButtonOwner {
+public class HuntPlannerView extends VVerticalLayout implements ActionButtonOwner {
     private final Session session;
     private final OneTimeTokenService oneTimeTokenService;
     private final Dao service;
     private final Paragraph status = new Paragraph();
     private final Hr unassignedHr = new Hr();
+    private final NotificationService notificationService;
     H2 activeTitle = new H2("Active members:");
     H2 inActiveTitle = new H2("Inactive members:");
     Div assigned = new Slot();
@@ -57,10 +59,11 @@ public class TeamMembersView extends VerticalLayout implements ActionButtonOwner
         setTooltipText("Directly adds a new hunter to team. If hunter wants to start using the app later, a sign-in link can be shared.");
     }};
 
-    public TeamMembersView(Session session, OneTimeTokenService oneTimeTokenService, Dao service) {
+    public HuntPlannerView(Session session, OneTimeTokenService oneTimeTokenService, Dao service, NotificationService notificationService) {
         this.session = session;
         this.oneTimeTokenService = oneTimeTokenService;
         this.service = service;
+        this.notificationService = notificationService;
     }
 
     public void createNewMember() {
@@ -95,7 +98,7 @@ public class TeamMembersView extends VerticalLayout implements ActionButtonOwner
             add(new VButton("Stop hunt", this::stopHunt));
         }
         add(new HorizontalLayout(
-                new DefaultButton("Start new hunt", this::startHunt){{
+                new DefaultButton("Announce new hunt", this::announceHunt){{
                     setIcon(VaadinIcon.PLAY.create());
                 }},
                 new DeleteButton("Reset", this::resetAssignments) {{
@@ -123,10 +126,11 @@ public class TeamMembersView extends VerticalLayout implements ActionButtonOwner
         init();
     }
 
-    private void startHunt() {
-        session.getCurrentTeam().startHunt();
-        VNotification.prominent("TODO notifications for hunters etc.");
-        init();
+    private void announceHunt() {
+        Team team = session.getCurrentTeam();
+        team.announceHunt();
+        notificationService.teamWideMessage(team.name, "Spots assigned, move to your spot!", team);
+        navigate(MainView.class);
     }
 
     private void resetAssignments() {
@@ -199,6 +203,7 @@ public class TeamMembersView extends VerticalLayout implements ActionButtonOwner
 
             String url = "https://paik.at/my-ott-submit?token=" + token.getTokenValue();
 
+            // TODO extract to re-usable helper
             getElement().executeJs("""
                     const shareData = {
                       title: "Share one-time-login to Paik.at as %s",

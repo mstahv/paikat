@@ -10,6 +10,7 @@ import at.paik.service.TeamEventDistributor;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vaadin.flow.component.UI;
+import com.vaadin.flow.server.webpush.WebPushSubscription;
 import com.vaadin.flow.spring.security.AuthenticationContext;
 import org.apache.commons.io.IOUtils;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
@@ -173,5 +174,11 @@ public class Session {
 
     public Optional<MapLibre.ViewPort> getMapViewport() {
         return Optional.ofNullable(viewport);
+    }
+
+    public void saveWebPushSubscription(WebPushSubscription subscription) {
+        User user = user().get();
+        user.webPushSubscriptions.add(subscription);
+        dao.saveSubscriptions(user);
     }
 }

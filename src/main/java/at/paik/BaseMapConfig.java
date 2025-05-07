@@ -27,14 +27,15 @@ public class BaseMapConfig {
             }
 
             switch (mapStyle) {
-                case Maptiler_OSM -> map.initStyle("https://api.maptiler.com/maps/streets/style.json?key=6c5QDyG7DyFdqb74rjI5");
+                case Maptiler_OSM ->
+                        map.initStyle("https://api.maptiler.com/maps/streets/style.json?key=6c5QDyG7DyFdqb74rjI5");
                 case FinlandNLS -> {
                     map.initStyle(getClass().getResourceAsStream("/maastokartta.json"));
                 }
             }
 
             session.getMapViewport().ifPresent(viewPort -> {
-                map.fitBounds(viewPort.getBounds(),new FitBoundsOptions(){{
+                map.fitBounds(viewPort.getBounds(), new FitBoundsOptions() {{
                     setAnimate(false);
                 }});
             });

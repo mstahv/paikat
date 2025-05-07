@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>in.virit</groupId>
     <artifactId>paikat</artifactId>
-    <name>Project base for Vaadin Flow and Spring Boot</name>
+    <name>Example PWA with Vaadin, Spring Boot, EclipseStore et al.</name>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
@@ -14,13 +14,16 @@
 
     <parent>
         <groupId>in.virit.sb</groupId>
-        <!-- Use project-parent if you don't want to have Viritin dependency -->
         <artifactId>viritin-project-parent</artifactId>
         <version>0.0.13</version>
         <relativePath/>
     </parent>
 
     <dependencies>
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>flow-webpush</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.eclipse.store</groupId>
             <artifactId>integrations-spring-boot3</artifactId>

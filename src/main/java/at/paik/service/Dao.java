@@ -80,4 +80,8 @@ public class Dao {
         storageManager.store(getData().users);
         return user;
     }
+
+    public void saveSubscriptions(User user) {
+        storageManager.storeAll(user, user.webPushSubscriptions);
+    }
 }

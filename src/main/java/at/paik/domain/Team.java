@@ -19,7 +19,7 @@ public class Team {
     private Hunt activeHunt;
     private MapStyle mapStyle;
 
-    public void startHunt() {
+    public void announceHunt() {
         activeHunt = new Hunt(this);
     }
 

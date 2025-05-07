@@ -6,14 +6,23 @@ import at.paik.domain.Team;
 import at.paik.domain.User;
 import at.paik.service.TeamEventDistributor;
 import com.vaadin.flow.component.AttachEvent;
+import com.vaadin.flow.component.HasElement;
 import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Emphasis;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.H5;
+import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.RouteConfiguration;
+import com.vaadin.flow.router.Router;
+import com.vaadin.flow.server.webpush.WebPush;
+import elemental.json.JsonNumber;
+import elemental.json.impl.JreJsonNumber;
 import jakarta.annotation.security.PermitAll;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
@@ -37,11 +46,13 @@ import static java.lang.Math.PI;
 public class MainView extends VVerticalLayout implements Consumer<HuntStatusEvent> {
 
     private final Session session;
+    private final WebPush webPush;
     private Hunt hunt;
     UI ui;
 
-    public MainView(Session session, TeamEventDistributor ted) {
+    public MainView(Session session, TeamEventDistributor ted, WebPush webPush) {
         this.session = session;
+        this.webPush = webPush;
         init();
         ui = UI.getCurrent();
         if(session.user().isPresent() && session.getCurrentTeam() != null) {
@@ -87,7 +98,31 @@ public class MainView extends VVerticalLayout implements Consumer<HuntStatusEven
                 add(new HuntSummary(h));
             }
         }, () -> {
-            add(new Emphasis("No ongoing hunt, wait for your assignment..."));
+            add(new Emphasis("The session is being planned, wait for your assignment..."));
+
+            if(webPush != null) {
+                // TODO figure out if Profile view would be better place for push notification settings 🤔
+                // Here more prominently visible, but logically in wrong place...
+                UI current = UI.getCurrent();
+                webPush.subscriptionExists(current, registered -> {
+                    if(registered) {
+                        add(new Paragraph("You have web push notifications enabled on this device, you'll be notified even if the application is closed."));
+                    /* TODO this should never happen :-) )
+                        if(registered && webPushService.isEmpty()) {
+                            webPush.fetchExistingSubscription(ui, webPushService::store);
+                        }
+                     */
+                    } else {
+                        add(new VButton("Subscribe for notifications...", e-> {
+                            webPush.subscribe(ui, subscription -> {
+                                session.saveWebPushSubscription(subscription);
+                                Notification.show("Subsribed, you'll now get a notification even if the app is closed!");
+                                e.getSource().setVisible(false);
+                            });
+                        }));
+                    }
+                });
+            }
         });
     }
 
@@ -136,11 +171,10 @@ public class MainView extends VVerticalLayout implements Consumer<HuntStatusEven
                         return "1m ago, 100m from ⦁";
                     }).setHeader("Last seen");
                     addComponentColumn(u -> {
-                        // TODO an actual checkbox instead so can remove status
+                        // TODO an actual checkbox instead so one can remove ready status, if suddenly more time is needed
                         return new VButton(VaadinIcon.CHECK_SQUARE, () -> {
                             session.markReady(u);
                             init(h);
-                            VNotification.prominent("TODO event/notifications/redraw others");
                         });
                     }).setHeader("");
                     withRowStyler((user, style) -> {
