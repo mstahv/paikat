@@ -3,6 +3,7 @@ package at.paik;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.HasElement;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -28,6 +29,10 @@ public class TopLayout extends MainLayout {
 
     @Override
     protected String getDrawerHeader() {
+        addToDrawer(new Image("/public/paikat.svg", "Logo"){{
+            setHeight("4em");
+            getStyle().setMargin("1em");
+        }});
         return "Paik.at }>";
     }
 

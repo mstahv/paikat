@@ -70,6 +70,14 @@ html {
     background-color: #f8fff7;
 }
 
+.maplibregl-marker {
+    color:black;
+}
+
+.maplibregl-marker div div {
+    text-shadow: 1px 1px 1px #fff, -1px -1px 1px #fff;
+}
+
 @media (display-mode: standalone) and @supports (-webkit-touch-callout: none) {
     vaadin-app-layout[overlay]::part(navbar) {
         /* workaround for "regression" after https://github.com/vaadin/flow/pull/21025

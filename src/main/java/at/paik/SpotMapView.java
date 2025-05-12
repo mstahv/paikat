@@ -191,7 +191,7 @@ public class SpotMapView extends VerticalLayout implements ActionButtonOwner {
         void init() {
             removeAll();
             add(new VHorizontalLayout(new H5(s.getName()), new VButton(VaadinIcon.POWER_OFF, () -> {
-                session.getCurrentTeam().togglSpot(s);
+                session.getCurrentTeam().toggleSpot(s);
                 init();
                 updateMarker(s, marker);
             })).withAlignItems(Alignment.BASELINE));

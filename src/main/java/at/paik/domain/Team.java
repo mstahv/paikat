@@ -31,7 +31,7 @@ public class Team {
         activeHunt = null;
     }
 
-    public boolean togglSpot(User user) {
+    public boolean toggleUser(User user) {
         boolean enabled = disabledHunters.remove(user);
         if (enabled) {
             return true;
@@ -53,7 +53,7 @@ public class Team {
         return !disabledHunters.contains(u);
     }
 
-    public boolean togglSpot(Spot spot) {
+    public boolean toggleSpot(Spot spot) {
         boolean enabled = disabledSpots.remove(spot);
         if (enabled) {
             return true;

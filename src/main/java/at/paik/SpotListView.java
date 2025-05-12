@@ -107,7 +107,7 @@ public class SpotListView extends VerticalLayout implements ActionButtonOwner {
         }
 
         private void toggle() {
-            boolean enabled = session.getCurrentTeam().togglSpot(spot);
+            boolean enabled = session.getCurrentTeam().toggleSpot(spot);
             if (enabled) {
                 active.add(this);
             } else {

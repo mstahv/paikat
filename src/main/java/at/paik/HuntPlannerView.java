@@ -35,6 +35,7 @@ import org.vaadin.firitin.components.notification.VNotification;
 import org.vaadin.firitin.components.orderedlayout.VVerticalLayout;
 import org.vaadin.firitin.layouts.HorizontalFloatLayout;
 import org.vaadin.firitin.util.BrowserPrompt;
+import org.vaadin.firitin.util.Share;
 
 import java.util.List;
 import java.util.Optional;
@@ -201,24 +202,24 @@ public class HuntPlannerView extends VVerticalLayout implements ActionButtonOwne
         private void ottLogin() {
             OneTimeToken token = oneTimeTokenService.generate(new GenerateOneTimeTokenRequest(user.getUsername()));
 
-            String url = "https://paik.at/my-ott-submit?token=" + token.getTokenValue();
-
-            // TODO extract to re-usable helper
-            getElement().executeJs("""
-                    const shareData = {
-                      title: "Share one-time-login to Paik.at as %s",
-                      text: "Use this one-time-link to login to Paik.at. Link is valid only for a a period of time. For smooth experiene in the future, register a passkey right after login.",
-                      url: "%s",
-                    };
-                    navigator.share(shareData);
-                    """.formatted(user.getUsername(), url));
+            var ottLoginUri = "https://paik.at/my-ott-submit?token=" + token.getTokenValue();
+            /*
+             * Using the browser's Share API, user can share the link via email, sms, etc.
+             */
+            Share.share("Join Paik.at as " +user.getUsername(),
+                    """
+                    Use this one-time-link to login to Paik.at. Link is valid only 
+                    for a a period of time. For smooth experiene in the future, 
+                    register a passkey right after login.
+                    """,
+                    ottLoginUri);
         }
 
         private void toggle() {
             if (user.getAssignment() != null) {
                 user.setSpot(null);
             }
-            session.getCurrentTeam().togglSpot(user);
+            session.getCurrentTeam().toggleUser(user);
             placeInCorrectSlot();
             updateCard();
         }
