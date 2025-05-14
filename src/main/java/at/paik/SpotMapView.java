@@ -245,12 +245,13 @@ public class SpotMapView extends VerticalLayout implements ActionButtonOwner {
     }
 
     private void newSpot() {
-        Spot spot = new Spot();
-        spot.setPoint((Point) crosshair.getGeometry());
-        Double zoomLevel = map.getZoomLevel();
-        new SpotEditor(session, spot, zoomLevel).addDetachListener(
-                detachEvent -> init());
+        if(crosshair !=null) {
+            Spot spot = new Spot();
+            spot.setPoint((Point) crosshair.getGeometry());
+            Double zoomLevel = map.getZoomLevel();
+            new SpotEditor(session, spot, zoomLevel).addDetachListener(
+                    detachEvent -> init());
+        }
     }
-
 
 }
