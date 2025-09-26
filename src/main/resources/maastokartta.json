@@ -1,5 +1,4 @@
 {
-  "comment" : "Generated with Maplibre Vaadin integration",
   "version" : 8,
   "name" : "Maastokartta",
   "sprite" : [ {
@@ -194,7 +193,7 @@
     "source" : "mtk",
     "source-layer" : "muuavoinalue",
     "paint" : {
-      "fill-color" : "rgba(255, 255, 130, 1.0)"
+      "fill-color" : "rgb(255 255 130)"
     }
   }, {
     "id" : "taytemaa",
@@ -262,6 +261,16 @@
       "fill-color" : "#c6c6c6"
     }
   }, {
+    "id" : "46929f97-196f-46bf-b4b0-69973a23ac2c",
+    "type" : "circle",
+    "source" : "mtk",
+    "source-layer" : "kalliosymboli",
+    "paint" : {
+      "circle-color" : "#c6c6c6",
+      "circle-radius" : [ "interpolate", [ "linear" ], [ "zoom" ], 13, 1, 25, 30 ]
+    },
+    "minzoom" : 13
+  }, {
     "id" : "maastokuvionreuna",
     "type" : "line",
     "source" : "mtk",
@@ -308,7 +317,7 @@
     "source-layer" : "tieviiva-muut",
     "filter" : [ "any", [ "==", "kohdeluokka", 12141 ], [ "==", "kohdeluokka", 12121 ], [ "==", "kohdeluokka", 12122 ], [ "==", "kohdeluokka", 12131 ], [ "==", "kohdeluokka", 12132 ] ],
     "paint" : {
-      "line-color" : "rgba(14, 14, 14, 1.0)",
+      "line-color" : "rgb(14 14 14)",
       "line-width" : [ "interpolate", [ "exponential", 1.55 ], [ "zoom" ], 6, 0.7, 20, 20 ]
     },
     "minzoom" : 11
@@ -319,7 +328,7 @@
     "source-layer" : "tieviiva-muut",
     "filter" : [ "any", [ "==", "kohdeluokka", 12316 ], [ "==", "kohdeluokka", 12313 ] ],
     "paint" : {
-      "line-color" : "rgba(14, 14, 14, 1.0)",
+      "line-color" : "rgb(14 14 14)",
       "line-width" : [ "interpolate", [ "exponential", 1.55 ], [ "zoom" ], 6, 0.7, 20, 20 ],
       "line-dasharray" : [ 8, 2 ]
     },
@@ -453,7 +462,7 @@
     },
     "minzoom" : 13
   }, {
-    "id" : "1cc4354f-1621-458d-80de-87673b47f591",
+    "id" : "02a979cd-e3c8-4667-8ee8-00969a52e2cb",
     "type" : "circle",
     "source" : "mtk",
     "source-layer" : "suurjannitelinjanpylvas",
@@ -465,7 +474,7 @@
     },
     "minzoom" : 14
   }, {
-    "id" : "a157f9ff-c3c1-47a6-8d54-f64ecd5f366a",
+    "id" : "de77822b-565d-4624-b137-bf52dd0544a4",
     "type" : "circle",
     "source" : "mtk",
     "source-layer" : "muuntaja",
@@ -477,7 +486,7 @@
     },
     "minzoom" : 14
   }, {
-    "id" : "45c065f8-ddba-49f9-afea-9ab8f7ee3cda",
+    "id" : "38cdf337-722e-4c8a-8c0c-56fc8912f001",
     "type" : "symbol",
     "source" : "mtk",
     "source-layer" : "sahkolinjansymboli",
@@ -496,7 +505,7 @@
     "source" : "mtk",
     "source-layer" : "autoliikennealue",
     "paint" : {
-      "fill-color" : "rgba(203, 143, 101, 1.0)"
+      "fill-color" : "rgb(203 143 101)"
     }
   }, {
     "id" : "kivi",
@@ -541,37 +550,6 @@
       "text-color" : "#666"
     }
   }, {
-    "id" : "tekstikunnannimi",
-    "type" : "symbol",
-    "source" : "mtk",
-    "source-layer" : "paikannimi",
-    "filter" : [ "==", "kohdeluokka", 48111 ],
-    "layout" : {
-      "text-field" : "{teksti}",
-      "text-font" : [ "Open Sans Semibold" ],
-      "text-size" : 14
-    },
-    "paint" : {
-      "text-color" : "#000",
-      "text-halo-color" : "#fff",
-      "text-halo-width" : 1
-    }
-  }, {
-    "id" : "tekstimajorcity",
-    "type" : "symbol",
-    "source" : "mtk",
-    "source-layer" : "paakaupungit",
-    "layout" : {
-      "text-field" : "{teksti}",
-      "text-font" : [ "Open Sans Semibold" ],
-      "text-size" : 16
-    },
-    "paint" : {
-      "text-color" : "#000",
-      "text-halo-color" : "#fff",
-      "text-halo-width" : 1
-    }
-  }, {
     "id" : "veden-reuna",
     "type" : "line",
     "source" : "mtk",
@@ -608,7 +586,7 @@
     "source" : "kk100",
     "source-layer" : "korkeuskayra100",
     "paint" : {
-      "line-color" : "rgba(164, 50, 50, 0.5)",
+      "line-color" : "rgb(164 50 50 / 0.50)",
       "line-width" : [ "interpolate", [ "linear" ], [ "zoom" ], 6, 0.001, 8, 0.5 ]
     },
     "minzoom" : 6,
@@ -619,7 +597,7 @@
     "source" : "kk20",
     "source-layer" : "korkeuskayra20",
     "paint" : {
-      "line-color" : [ "interpolate", [ "linear" ], [ "zoom" ], 9, "rgba(164, 50, 50, 0.0)", 12, "rgba(164, 50, 50, 0.5)", 13, "rgba(164, 50, 50, 0.0)" ],
+      "line-color" : [ "interpolate", [ "linear" ], [ "zoom" ], 9, "rgb(164 50 50 / 0.00)", 12, "rgb(164 50 50 / 0.50)", 13, "rgb(164 50 50 / 0.00)" ],
       "line-width" : [ "interpolate", [ "linear" ], [ "zoom" ], 6, 0.001, 11, 1.0 ]
     },
     "maxzoom" : 13
@@ -629,7 +607,7 @@
     "source" : "mtk",
     "source-layer" : "korkeuskayra",
     "paint" : {
-      "line-color" : [ "interpolate", [ "linear" ], [ "zoom" ], 12, "rgba(164, 50, 50, 0.0)", 13, "rgba(164, 50, 50, 1.0)" ],
+      "line-color" : [ "interpolate", [ "linear" ], [ "zoom" ], 12, "rgb(164 50 50 / 0.00)", 13, "rgb(164 50 50)" ],
       "line-width" : [ "interpolate", [ "linear" ], [ "zoom" ], 10, 0.05, 16, 2.0 ]
     },
     "filter" : [ "==", [ "%", [ "get", "korkeusarvo" ], 5000 ], 0 ]
@@ -639,7 +617,7 @@
     "source" : "mtk",
     "source-layer" : "korkeuskayra",
     "paint" : {
-      "line-color" : [ "interpolate", [ "linear" ], [ "zoom" ], 12, "rgba(164, 50, 50, 0.0)", 13, "rgba(164, 50, 50, 1.0)" ],
+      "line-color" : [ "interpolate", [ "linear" ], [ "zoom" ], 12, "rgb(164 50 50 / 0.00)", 13, "rgb(164 50 50)" ],
       "line-width" : [ "interpolate", [ "linear" ], [ "zoom" ], 10, 0.03, 16, 1.2 ]
     },
     "filter" : [ "==", [ "%", [ "get", "korkeusarvo" ], 5000 ], 2500 ]
@@ -649,9 +627,56 @@
     "source" : "mtk",
     "source-layer" : "vesikivikko",
     "paint" : {
-      "line-color" : "rgba(0, 0, 0, 0.5)",
+      "line-color" : "rgb(0 0 0 / 0.50)",
       "line-width" : 1.0,
       "line-dasharray" : [ 1, 1 ]
+    }
+  }, {
+    "id" : "tekstikunnannimi",
+    "type" : "symbol",
+    "source" : "mtk",
+    "source-layer" : "paikannimi",
+    "filter" : [ "==", "kohdeluokka", 48111 ],
+    "layout" : {
+      "text-field" : "{teksti}",
+      "text-font" : [ "Open Sans Semibold" ],
+      "text-size" : 16
+    },
+    "paint" : {
+      "text-color" : "#000",
+      "text-halo-color" : "#fff",
+      "text-halo-width" : 1
+    }
+  }, {
+    "id" : "TekstiPaikannimi",
+    "type" : "symbol",
+    "source" : "mtk",
+    "source-layer" : "paikannimi",
+    "filter" : [ "!=", "kohdeluokka", 48111 ],
+    "layout" : {
+      "text-field" : "{teksti}",
+      "text-font" : [ "Open Sans Semibold" ],
+      "text-size" : 12
+    },
+    "paint" : {
+      "text-color" : "#000",
+      "text-halo-color" : "#fff",
+      "text-halo-width" : 1
+    }
+  }, {
+    "id" : "tekstimajorcity",
+    "type" : "symbol",
+    "source" : "mtk",
+    "source-layer" : "paakaupungit",
+    "layout" : {
+      "text-field" : "{teksti}",
+      "text-font" : [ "Open Sans Semibold" ],
+      "text-size" : 16
+    },
+    "paint" : {
+      "text-color" : "#000",
+      "text-halo-color" : "#fff",
+      "text-halo-width" : 1
     }
   } ]
 }
